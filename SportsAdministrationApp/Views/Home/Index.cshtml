@@ -1,0 +1,28 @@
+﻿@model IEnumerable<SportsAdministrationApp.Models.User>
+
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Team</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.Name</td>
+                    <td>@user.Team</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>
