@@ -32,7 +32,8 @@ namespace SportsAdministrationApp
 
 
             services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
             //for userrepository implementation dependency injection
