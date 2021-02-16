@@ -1,21 +1,19 @@
-﻿@model SportsAdministrationApp.ViewModels.HomeDetailsViewModel
- 
+﻿@model SportsAdministrationApp.ViewModels.HomeDetailsViewModel 
 <html>
 <head>
-    <title>
-    </title>
+    <title></title>
 </head>
 <body>
-    <h3>@Model.PageTitle</h3>
+    <h3>@ViewBag.PageTitle</h3>
 
     <div>
-        Name: @Model.User.Name
+        Name : @Model.User.Name
     </div>
     <div>
-        Email: @Model.User.Email
+        Email : @Model.User.Email
     </div>
     <div>
-        Team: @Model.User.Team
+        Team : @Model.User.Team
     </div>
 </body>
 </html>

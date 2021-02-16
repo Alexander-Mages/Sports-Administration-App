@@ -10,5 +10,6 @@ namespace SportsAdministrationApp.ViewModels
     {
         public User User { get; set; }
         public string PageTitle { get; set; }
+
     }
 }

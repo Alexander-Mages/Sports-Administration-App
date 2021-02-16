@@ -31,8 +31,14 @@ namespace SportsAdministrationApp
                 options => options.UseSqlite(_config.GetConnectionString("UserDBConnection")));
 
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 8;
+                options.Password.RequiredUniqueChars = 3;
+
+                options.SignIn.RequireConfirmedEmail = true;
+            }).AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
             //for userrepository implementation dependency injection
