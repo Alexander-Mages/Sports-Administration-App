@@ -12,7 +12,8 @@ namespace SportsAdministrationApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        //Add this when nlog support is fixed
+        //private readonly ILogger<HomeController> _logger;
         private IUserRepository _userRepository;
         public HomeController(IUserRepository userRepository)
         {
