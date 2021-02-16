@@ -5,24 +5,20 @@
     <title>Employee List</title>
 </head>
 <body>
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Team</th>
-            </tr>
-        </thead>
-        <tbody>
+            <div class="card-deck">
             @foreach (var user in Model)
             {
-                <tr>
-                    <td>@user.Id</td>
-                    <td>@user.Name</td>
-                    <td>@user.Team</td>
-                </tr>
+                <div class="card m-3">
+                    <div class="card-header">
+                        <h3>@user.Name</h3>
+                </div>
+                    <div class="card-body" text-center>
+                        <a href="#" class="btn btn-primary">View</a>
+                        <a href="#" class="btn btn-primary">Edit</a>
+                        <a href="#" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
+            </div>
 </body>
 </html>
