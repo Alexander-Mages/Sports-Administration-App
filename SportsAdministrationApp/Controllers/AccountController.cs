@@ -25,19 +25,19 @@ namespace SportsAdministrationApp.Controllers
         }
 
 
-
+        //LOGOUT
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
             return RedirectToAction("index", "home");
         }
 
+        //REGISTER
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
-       
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
@@ -72,6 +72,7 @@ namespace SportsAdministrationApp.Controllers
             return View(model);
         }
 
+        //CONFIRM EMAIL
         [HttpGet]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
@@ -95,7 +96,7 @@ namespace SportsAdministrationApp.Controllers
             return View("Error");
         }
 
-
+        //LOGIN
         [HttpGet]
         public IActionResult Login()
         {
@@ -120,13 +121,13 @@ namespace SportsAdministrationApp.Controllers
             }
             return View(model);
         }
-
+        
+        //FORGOT PASSWORD
         [HttpGet]
         public IActionResult ForgotPassword()
         {
             return View();
         }
-
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
@@ -148,5 +149,41 @@ namespace SportsAdministrationApp.Controllers
             }
             return View(model);
         }
+        
+        //RESET PASSWORD
+        [HttpGet]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if (token == null || email == null)
+            {
+                ModelState.AddModelError("", "Invalid Passsword Reset Token");
+            }
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.FindByEmailAsync(model.Email);
+                if (user != null)
+                {
+                    var result = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
+                    if (result.Succeeded)
+                    {
+                        return View("ResetPasswordConfirmation");
+                    }
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                    return View(model);
+                }
+                return View("ResetPasswordConfirmation");
+            }
+            return View(model);
+        }
+
+
     }
 }
