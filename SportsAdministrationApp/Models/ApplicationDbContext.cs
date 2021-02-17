@@ -17,8 +17,23 @@ namespace SportsAdministrationApp.Models
         public new DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Seed();
+            //seed database, going to keep this present to seed custom users
+            modelBuilder.Entity<User>().HasData(
+                            new User
+                            {
+                                //Id = 1,
+                                Name = "John",
+                                Team = "Swim",
+                                Email = "John@gmail.com"
+                            },
+                            new User
+                            {
+                                //Id = 2,
+                                Name = "Bill",
+                                Team = "Tennis",
+                                Email = "Bill@gmail.com"
+                            }
+                            );
         }
     }
 }

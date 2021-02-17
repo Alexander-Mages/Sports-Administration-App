@@ -42,7 +42,7 @@ namespace SportsAdministrationApp
 
             services.AddControllersWithViews();
             //for userrepository implementation dependency injection
-            services.AddScoped<IUserRepository, SQLUserRepository>();
+            //services.AddScoped<IUserRepository, SQLUserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
