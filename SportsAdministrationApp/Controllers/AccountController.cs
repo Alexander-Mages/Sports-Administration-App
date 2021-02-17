@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SportsAdministrationApp.Models;
 using SportsAdministrationApp.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,10 @@ namespace SportsAdministrationApp.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly ILogger<AccountController> logger;
-        //private readonly DbContext<ApplicationDbContext>
 
         public AccountController(UserManager<IdentityUser> userManager,
                                  SignInManager<IdentityUser> signInManager,
+                                 ApplicationDbContext DbContext,
                                  ILogger<AccountController> logger)
         {
             this.userManager = userManager;

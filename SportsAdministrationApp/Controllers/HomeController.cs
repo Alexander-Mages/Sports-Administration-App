@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SportsAdministrationApp.Models;
 using SportsAdministrationApp.ViewModels;
@@ -14,15 +16,28 @@ namespace SportsAdministrationApp.Controllers
     {
         //Add this when nlog support is fixed
         //private readonly ILogger<HomeController> _logger;
-        private IUserRepository _userRepository;
-        public HomeController(IUserRepository userRepository)
+        private readonly UserManager<IdentityUser> userManager;
+        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly ILogger<AccountController> logger;
+        private readonly ApplicationDbContext _dbContext;
+
+        //visual studio reccomended this, not sure why I need to do it
+        //public ApplicationDbContext ApplicationDbContext { get; }
+
+        public HomeController(UserManager<IdentityUser> userManager,
+                                 SignInManager<IdentityUser> signInManager,
+                                 ApplicationDbContext dbContext,
+                                 ILogger<AccountController> logger)
         {
-            _userRepository = userRepository;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+            this.logger = logger;
+            _dbContext = dbContext;
         }
 
         public IActionResult Index()
         {
-            var model = _userRepository.GetAllUser();
+            var model = _dbContext.Users;
             return View(model);
         }
 
@@ -35,7 +50,7 @@ namespace SportsAdministrationApp.Controllers
         {
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
-                User = _userRepository.GetUser(id),
+                User = _dbContext.Users.Find(id),
                 PageTitle = "User Details"
             };
             return View(homeDetailsViewModel);
