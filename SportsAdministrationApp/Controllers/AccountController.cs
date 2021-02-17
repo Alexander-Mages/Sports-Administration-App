@@ -12,25 +12,26 @@ namespace SportsAdministrationApp.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
-        private readonly ILogger<AccountController> logger;
-
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly ILogger<AccountController> _logger;
+        private readonly ApplicationDbContext _dbContext;
         public AccountController(UserManager<IdentityUser> userManager,
                                  SignInManager<IdentityUser> signInManager,
-                                 ApplicationDbContext DbContext,
+                                 ApplicationDbContext dbContext,
                                  ILogger<AccountController> logger)
         {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
-            this.logger = logger;
+            this._userManager = userManager;
+            this._signInManager = signInManager;
+            this._logger = logger;
+            this._dbContext = dbContext;
         }
 
 
         //LOGOUT
         public async Task<IActionResult> Logout()
         {
-            await signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
             return RedirectToAction("index", "home");
         }
 
@@ -46,19 +47,19 @@ namespace SportsAdministrationApp.Controllers
             if (ModelState.IsValid)
             {
                 var user = new IdentityUser { UserName = model.Email, Email = model.Email };
-                var result = await userManager.CreateAsync(user, model.Password);
+                var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
-                    var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var confirmationLink = Url.Action("ConfirmEmail", "Account",
                                             new { userId = user.Id, token = token }, Request.Scheme);
 
-                    logger.Log(LogLevel.Warning, confirmationLink);
+                    _logger.Log(LogLevel.Warning, confirmationLink);
 
 
                     //await signInManager.SignInAsync(user, isPersistent: false);
-                    if (signInManager.IsSignedIn(User))
+                    if (_signInManager.IsSignedIn(User))
                     {
                         return RedirectToAction("index", "home");
                     }
@@ -82,7 +83,7 @@ namespace SportsAdministrationApp.Controllers
             {
                 return RedirectToAction("index", "home");
             }
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
@@ -90,7 +91,7 @@ namespace SportsAdministrationApp.Controllers
                 return View("NotFound");
             }
             //comment this out
-            var result = await userManager.ConfirmEmailAsync(user, token);
+            var result = await _userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded)
             {
                 return View();
@@ -111,7 +112,7 @@ namespace SportsAdministrationApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await signInManager.PasswordSignInAsync(model.Username, model.Password,
+                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password,
                                     model.RememberMe, false);
 
                 if (result.Succeeded)
@@ -136,10 +137,10 @@ namespace SportsAdministrationApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await userManager.FindByEmailAsync(model.Email);
-                if (user != null && await userManager.IsEmailConfirmedAsync(user))
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user != null && await _userManager.IsEmailConfirmedAsync(user))
                 {
-                    var token = await userManager.GeneratePasswordResetTokenAsync(user);
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
                     var passwordResetLink = Url.Action("ResetPassword", "Account",
                         new { email = model.Email, token = token }, Request.Scheme);
@@ -168,10 +169,10 @@ namespace SportsAdministrationApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await userManager.FindByEmailAsync(model.Email);
+                var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user != null)
                 {
-                    var result = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
+                    var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
                     if (result.Succeeded)
                     {
                         return View("ResetPasswordConfirmation");
