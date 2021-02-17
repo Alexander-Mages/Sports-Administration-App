@@ -14,6 +14,7 @@ namespace SportsAdministrationApp.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly ILogger<AccountController> logger;
+        //private readonly DbContext<ApplicationDbContext>
 
         public AccountController(UserManager<IdentityUser> userManager,
                                  SignInManager<IdentityUser> signInManager,
@@ -87,6 +88,7 @@ namespace SportsAdministrationApp.Controllers
                 ViewBag.ErrorMessage = $"The User ID {userId} is invalid";
                 return View("NotFound");
             }
+            //comment this out
             var result = await userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded)
             {
@@ -108,7 +110,7 @@ namespace SportsAdministrationApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await signInManager.PasswordSignInAsync(model.Email, model.Password,
+                var result = await signInManager.PasswordSignInAsync(model.Username, model.Password,
                                     model.RememberMe, false);
 
                 if (result.Succeeded)

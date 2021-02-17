@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+//remove this file (if you want)
 namespace SportsAdministrationApp.Models
 {
     public static class ModelBuilderExtensions
