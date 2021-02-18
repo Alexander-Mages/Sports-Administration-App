@@ -12,12 +12,12 @@ namespace SportsAdministrationApp.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<Microsoft.AspNetCore.Identity.IdentityUser> _userManager;
+        private readonly SignInManager<Microsoft.AspNetCore.Identity.IdentityUser> _signInManager;
         private readonly ILogger<AccountController> _logger;
         private readonly ApplicationDbContext _dbContext;
-        public AccountController(UserManager<IdentityUser> userManager,
-                                 SignInManager<IdentityUser> signInManager,
+        public AccountController(UserManager<Microsoft.AspNetCore.Identity.IdentityUser> userManager,
+                                 SignInManager<Microsoft.AspNetCore.Identity.IdentityUser> signInManager,
                                  ApplicationDbContext dbContext,
                                  ILogger<AccountController> logger)
         {
@@ -46,7 +46,7 @@ namespace SportsAdministrationApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+                var user = new Microsoft.AspNetCore.Identity.IdentityUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
@@ -61,7 +61,7 @@ namespace SportsAdministrationApp.Controllers
                     //await signInManager.SignInAsync(user, isPersistent: false);
                     if (_signInManager.IsSignedIn(User))
                     {
-                        return RedirectToAction("index", "home");
+                        return base.RedirectToAction("index", "home");
                     }
 
                     return View("ConfirmEmailError.cshtml", model);

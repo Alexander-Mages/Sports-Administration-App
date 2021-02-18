@@ -16,16 +16,16 @@ namespace SportsAdministrationApp.Controllers
     {
         //Add this when nlog support is fixed
         //private readonly ILogger<HomeController> _logger;
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
         private readonly ILogger<AccountController> logger;
         private readonly ApplicationDbContext _dbContext;
 
         //visual studio reccomended this, not sure why I need to do it
         //public ApplicationDbContext ApplicationDbContext { get; }
 
-        public HomeController(UserManager<IdentityUser> userManager,
-                                 SignInManager<IdentityUser> signInManager,
+        public HomeController(UserManager<User> userManager,
+                                 SignInManager<User> signInManager,
                                  ApplicationDbContext dbContext,
                                  ILogger<AccountController> logger)
         {
@@ -46,11 +46,11 @@ namespace SportsAdministrationApp.Controllers
             return View();
         }
 
-        public IActionResult Details(int id)
+        public IActionResult Details()
         {
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
-                User = _dbContext.Users.Find(id),
+                User = _dbContext.Users.Find(2),
                 PageTitle = "User Details"
             };
             return View(homeDetailsViewModel);

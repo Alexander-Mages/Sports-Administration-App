@@ -31,7 +31,7 @@ namespace SportsAdministrationApp
                 options => options.UseSqlite(_config.GetConnectionString("UserDBConnection")));
 
 
-            services.AddIdentity<User, IdentityRole>(options =>
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 8;
                 options.Password.RequiredUniqueChars = 3;

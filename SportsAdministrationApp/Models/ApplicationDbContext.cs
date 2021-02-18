@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,17 +8,18 @@ using System.Threading.Tasks;
 
 namespace SportsAdministrationApp.Models
 {
-    public class ApplicationDbContext : IdentityDbContext<User>
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
 
         }
-        public new DbSet<User> Users { get; set; }
+        //public new DbSet<IdentityUser> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //seed database, going to keep this present to seed custom users
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<User>().HasData(
                             new User
                             {
