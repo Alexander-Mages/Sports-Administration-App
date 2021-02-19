@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SportsAdministrationApp.Models;
 using SportsAdministrationApp.ViewModels;
@@ -13,15 +14,15 @@ namespace SportsAdministrationApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private IUserRepository _userRepository;
-        public HomeController(IUserRepository userRepository)
+        private readonly UserManager<User> _userManager;
+        public HomeController(UserManager<User> userManager)
         {
-            _userRepository = userRepository;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
         {
-            var model = _userRepository.GetAllUser();
+            var model = _userManager.Users.ToList();
             return View(model);
         }
 
@@ -30,11 +31,12 @@ namespace SportsAdministrationApp.Controllers
             return View();
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(string id)
         {
+            
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
-                User = _userRepository.GetUser(id),
+                User = await _userManager.FindByIdAsync(id),
                 PageTitle = "User Details"
             };
             return View(homeDetailsViewModel);
