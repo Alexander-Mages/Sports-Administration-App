@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportsAdministrationApp.Models;
 
 namespace SportsAdministrationApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210219141054_Combine User Types")]
+    partial class CombineUserTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,53 +231,31 @@ namespace SportsAdministrationApp.Migrations
                     b.HasData(
                         new
                         {
-<<<<<<< HEAD
-                            Id = "c97d813b-b341-4785-b490-1c9b288753fc",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "daaef196-d488-4f69-b047-fe000890c653",
-=======
                             Id = "1",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "b3ed3e44-0c39-4062-9ca6-05dc1e02334f",
->>>>>>> master
                             Email = "John@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-<<<<<<< HEAD
-                            SecurityStamp = "a87031ee-7b92-4228-844a-99da739c8520",
-                            TwoFactorEnabled = false,
-=======
                             SecurityStamp = "1793ae2f-4f0a-456a-9eeb-bd758d0315a0",
                             TwoFactorEnabled = false,
                             UserName = "John@gmail.com",
->>>>>>> master
                             Name = "John",
                             Team = "Swim"
                         },
                         new
                         {
-<<<<<<< HEAD
-                            Id = "a0a94521-b512-4a4b-ac73-c73b7c247af9",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "6898bca3-87d5-412a-a8ab-1d1a8db3798e",
-=======
                             Id = "2",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "e37809a8-a028-4206-85cf-fea5aac5814b",
->>>>>>> master
                             Email = "Bill@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-<<<<<<< HEAD
-                            SecurityStamp = "78746fb6-b270-48b6-881b-39f393664f01",
-                            TwoFactorEnabled = false,
-=======
                             SecurityStamp = "6e260a9a-2c82-40ed-a6c0-26bacee45e99",
                             TwoFactorEnabled = false,
                             UserName = "Bill@gmail.com",
->>>>>>> master
                             Name = "Bill",
                             Team = "Tennis"
                         });

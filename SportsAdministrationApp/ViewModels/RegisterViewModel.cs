@@ -8,6 +8,14 @@ namespace SportsAdministrationApp.ViewModels
 {
     public class RegisterViewModel
     {
+
+        [Required]
+        [MaxLength(50, ErrorMessage = "Name cannot exceed 50 characters")]
+        public string Name { get; set; }
+
+        [Required]
+        public string Team { get; set; }
+
         [Required]
         [EmailAddress]
         public string Email { get; set; }

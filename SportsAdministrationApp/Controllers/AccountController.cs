@@ -12,6 +12,7 @@ namespace SportsAdministrationApp.Controllers
 {
     public class AccountController : Controller
     {
+<<<<<<< HEAD
         private readonly UserManager<Microsoft.AspNetCore.Identity.IdentityUser> _userManager;
         private readonly SignInManager<Microsoft.AspNetCore.Identity.IdentityUser> _signInManager;
         private readonly ILogger<AccountController> _logger;
@@ -19,6 +20,14 @@ namespace SportsAdministrationApp.Controllers
         public AccountController(UserManager<Microsoft.AspNetCore.Identity.IdentityUser> userManager,
                                  SignInManager<Microsoft.AspNetCore.Identity.IdentityUser> signInManager,
                                  ApplicationDbContext dbContext,
+=======
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
+        private readonly ILogger<AccountController> logger;
+
+        public AccountController(UserManager<User> userManager,
+                                 SignInManager<User> signInManager,
+>>>>>>> master
                                  ILogger<AccountController> logger)
         {
             this._userManager = userManager;
@@ -46,8 +55,13 @@ namespace SportsAdministrationApp.Controllers
         {
             if (ModelState.IsValid)
             {
+<<<<<<< HEAD
                 var user = new Microsoft.AspNetCore.Identity.IdentityUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
+=======
+                var user = new User { UserName = model.Email, Email = model.Email, Name=model.Name, Team=model.Team };
+                var result = await userManager.CreateAsync(user, model.Password);
+>>>>>>> master
 
                 if (result.Succeeded)
                 {

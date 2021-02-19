@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+<<<<<<< HEAD
 using Microsoft.EntityFrameworkCore;
+=======
+>>>>>>> master
 using Microsoft.Extensions.Logging;
 using SportsAdministrationApp.Models;
 using SportsAdministrationApp.ViewModels;
@@ -14,6 +17,7 @@ namespace SportsAdministrationApp.Controllers
 {
     public class HomeController : Controller
     {
+<<<<<<< HEAD
         //Add this when nlog support is fixed
         //private readonly ILogger<HomeController> _logger;
         private readonly UserManager<User> userManager;
@@ -33,11 +37,22 @@ namespace SportsAdministrationApp.Controllers
             this.signInManager = signInManager;
             this.logger = logger;
             this.dbContext = dbContext;
+=======
+        private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<User> _userManager;
+        public HomeController(UserManager<User> userManager)
+        {
+            _userManager = userManager;
+>>>>>>> master
         }
 
         public IActionResult Index()
         {
+<<<<<<< HEAD
             var model = dbContext.Users;
+=======
+            var model = _userManager.Users.ToList();
+>>>>>>> master
             return View(model);
         }
 
@@ -46,11 +61,20 @@ namespace SportsAdministrationApp.Controllers
             return View();
         }
 
+<<<<<<< HEAD
         public IActionResult Details(string id)
+=======
+        public async Task<IActionResult> Details(string id)
+>>>>>>> master
         {
+            
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
+<<<<<<< HEAD
                 User = dbContext.User.Find(id),
+=======
+                User = await _userManager.FindByIdAsync(id),
+>>>>>>> master
                 PageTitle = "User Details"
             };
             return View(homeDetailsViewModel);
