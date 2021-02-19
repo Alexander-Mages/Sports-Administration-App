@@ -9,7 +9,12 @@ namespace SportsAdministrationApp.Models
 {
     public class User : IdentityUser
     {
-        public string Team { get; set; }
+        [Required]
+        [MaxLength(50, ErrorMessage = "Name cannot exceed 50 characters")]
         public string Name { get; set; }
+        
+        [Required]
+        public string Team { get; set; }
+        
     }
 }

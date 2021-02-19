@@ -44,7 +44,7 @@ namespace SportsAdministrationApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = model.Email, Email = model.Email };
+                var user = new User { UserName = model.Email, Email = model.Email, Name=model.Name, Team=model.Team };
                 var result = await userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
