@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SportsAdministrationApp.Models;
 using SportsAdministrationApp.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,12 @@ namespace SportsAdministrationApp.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
         private readonly ILogger<AccountController> logger;
 
-        public AccountController(UserManager<IdentityUser> userManager,
-                                 SignInManager<IdentityUser> signInManager,
+        public AccountController(UserManager<User> userManager,
+                                 SignInManager<User> signInManager,
                                  ILogger<AccountController> logger)
         {
             this.userManager = userManager;
@@ -43,7 +44,7 @@ namespace SportsAdministrationApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+                var user = new User { UserName = model.Email, Email = model.Email };
                 var result = await userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)

@@ -13,17 +13,19 @@ namespace SportsAdministrationApp.Models
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
-                    Id = 1,
+                    Id = "1",
                     Name = "John",
                     Team = "Swim",
-                    Email = "John@gmail.com"
+                    Email = "John@gmail.com",
+                    UserName= "John@gmail.com"
                 },
                 new User
                 {
-                    Id = 2,
+                    Id = "2",
                     Name = "Bill",
                     Team = "Tennis",
-                    Email = "Bill@gmail.com"
+                    Email = "Bill@gmail.com",
+                    UserName= "Bill@gmail.com"
                 }
             );
         }
