@@ -19,7 +19,7 @@ namespace SportsAdministrationApp.Controllers
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly ILogger<AccountController> logger;
-        private readonly ApplicationDbContext _dbContext;
+        private readonly ApplicationDbContext dbContext;
 
         //visual studio reccomended this, not sure why I need to do it
         //public ApplicationDbContext ApplicationDbContext { get; }
@@ -32,12 +32,12 @@ namespace SportsAdministrationApp.Controllers
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
-            _dbContext = dbContext;
+            this.dbContext = dbContext;
         }
 
         public IActionResult Index()
         {
-            var model = _dbContext.Users;
+            var model = dbContext.Users;
             return View(model);
         }
 
@@ -46,11 +46,11 @@ namespace SportsAdministrationApp.Controllers
             return View();
         }
 
-        public IActionResult Details()
+        public IActionResult Details(string id)
         {
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
-                User = _dbContext.Users.Find(2),
+                User = dbContext.User.Find(id),
                 PageTitle = "User Details"
             };
             return View(homeDetailsViewModel);

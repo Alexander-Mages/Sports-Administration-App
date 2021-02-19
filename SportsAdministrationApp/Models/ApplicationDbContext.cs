@@ -15,7 +15,8 @@ namespace SportsAdministrationApp.Models
         {
 
         }
-        //public new DbSet<IdentityUser> Users { get; set; }
+        //might want to comment this below
+        public new DbSet<IdentityUser> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //seed database, going to keep this present to seed custom users
@@ -23,14 +24,14 @@ namespace SportsAdministrationApp.Models
             modelBuilder.Entity<User>().HasData(
                             new User
                             {
-                                //Id = 1,
+                                Id = 1,
                                 Name = "John",
                                 Team = "Swim",
                                 Email = "John@gmail.com"
                             },
                             new User
                             {
-                                //Id = 2,
+                                Id = 2,
                                 Name = "Bill",
                                 Team = "Tennis",
                                 Email = "Bill@gmail.com"
