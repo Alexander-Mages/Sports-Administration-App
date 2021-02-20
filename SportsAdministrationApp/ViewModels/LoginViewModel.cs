@@ -10,7 +10,7 @@ namespace SportsAdministrationApp.ViewModels
     {
         [Required]
         [EmailAddress]
-        public string Username { get; set; }
+        public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
