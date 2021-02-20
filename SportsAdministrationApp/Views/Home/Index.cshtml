@@ -13,7 +13,7 @@
                         <h3>@user.Name</h3>
                 </div>
                     <div class="card-body" text-center>
-                        <a href="#" class="btn btn-primary">View</a>
+                        <a  asp-controller="home" asp-action="details" asp-route-id="@user.Id" class="btn btn-primary">View</a>
                         <a href="#" class="btn btn-primary">Edit</a>
                         <a href="#" class="btn btn-danger">Delete</a>
                     </div>

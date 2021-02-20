@@ -22,4 +22,3 @@ namespace SportsAdministrationApp.Models
         }
     }
 }
-//git commit test
