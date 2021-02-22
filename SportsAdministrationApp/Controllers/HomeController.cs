@@ -14,7 +14,9 @@ namespace SportsAdministrationApp.Controllers
     //currently a controller for everything but account, remember to specialize it later if it gets too large
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        //uncomment when logger is needed, commented to supress warning
+        //private readonly ILogger<HomeController> _logger;
+
         private readonly UserManager<User> _userManager;
         public HomeController(UserManager<User> userManager)
         {
