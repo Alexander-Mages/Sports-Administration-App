@@ -17,7 +17,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="Team"></label>
-                <input asp-for="Team" class="form-control" />
+                <select name="Team" id="Team">
+                    <option value="Swim">Swim</option>
+                    <option value="Tennis">Tennis</option>
+                </select>                
                 <span asp-validation-for="Team" class="text-danger"></span>
             </div>
             <div class="form-group">

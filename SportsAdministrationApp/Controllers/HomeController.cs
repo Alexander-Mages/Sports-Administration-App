@@ -72,14 +72,8 @@ namespace SportsAdministrationApp.Controllers
                 user.Email = model.Email;
                 user.Team = model.Team;
 
-                User newUser = new User
-                {
-                    Name = model.Name,
-                    Email = model.Email,
-                    Team = model.Team,
-                };
 
-                await _userManager.UpdateAsync(newUser);
+                await _userManager.UpdateAsync(user);
                 return RedirectToAction("index");
             }
             return View();
