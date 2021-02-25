@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SportsAdministrationApp.Models;
+using SportsAdministrationApp.Services;
 using SportsAdministrationApp.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -15,14 +16,17 @@ namespace SportsAdministrationApp.Controllers
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly ILogger<AccountController> logger;
+        private readonly IEmailService emailService;
 
         public AccountController(UserManager<User> userManager,
                                  SignInManager<User> signInManager,
-                                 ILogger<AccountController> logger)
+                                 ILogger<AccountController> logger,
+                                 IEmailService emailService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
+            this.emailService = emailService;
         }
 
 
@@ -53,8 +57,9 @@ namespace SportsAdministrationApp.Controllers
                     var confirmationLink = Url.Action("ConfirmEmail", "Account",
                                             new { userId = user.Id, token = token }, Request.Scheme);
 
-                    logger.Log(LogLevel.Warning, confirmationLink);
-
+                    //logger.Log(LogLevel.Warning, confirmationLink);
+                    //sends confirmation email, ^to log for debug
+                    emailService.SendAuthEmail(user.Email, confirmationLink);
 
                     //await signInManager.SignInAsync(user, isPersistent: false);
                     if (signInManager.IsSignedIn(User))
@@ -143,7 +148,7 @@ namespace SportsAdministrationApp.Controllers
                         new { email = model.Email, token = token }, Request.Scheme);
 
                     //logger.Log(LogLevel.Warning, passwordResetLink);
-
+                    emailService.SendAuthEmail(user.Email, passwordResetLink);
                     return View("ForgotPasswordConfirmation");
                 }
                 return View("ForgotPasswordConfirmation");

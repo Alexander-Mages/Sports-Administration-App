@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SportsAdministrationApp.Models;
+using SportsAdministrationApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,10 @@ namespace SportsAdministrationApp
                 .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
+            //email:
+            services.AddSession();
+            services.AddSingleton<IConfiguration>(Configuration);
+            services.AddTransient<IEmailService, EmailService>();
             //for userrepository implementation dependency injection
             //services.AddScoped<IUserRepository, SQLUserRepository>();
         }
@@ -65,6 +70,8 @@ namespace SportsAdministrationApp
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
