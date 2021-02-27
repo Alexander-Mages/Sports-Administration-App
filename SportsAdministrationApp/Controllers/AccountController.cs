@@ -30,6 +30,17 @@ namespace SportsAdministrationApp.Controllers
         }
 
 
+
+        //TESTING, REMOVE AFTER USE
+        public IActionResult EMAILTEST()
+        {
+            emailService.SendAuthEmail("magespaula@gmail.com", "this is a test");
+            return View();
+        }
+
+
+
+
         //LOGOUT
         public async Task<IActionResult> Logout()
         {
@@ -59,6 +70,9 @@ namespace SportsAdministrationApp.Controllers
 
                     //logger.Log(LogLevel.Warning, confirmationLink);
                     //sends confirmation email, ^to log for debug
+                    Console.WriteLine(user.Email);
+                    Console.WriteLine(confirmationLink);
+                    
                     emailService.SendAuthEmail(user.Email, confirmationLink);
 
                     //await signInManager.SignInAsync(user, isPersistent: false);
@@ -67,7 +81,7 @@ namespace SportsAdministrationApp.Controllers
                         return RedirectToAction("index", "home");
                     }
 
-                    return View("ConfirmEmailError.cshtml", model);
+                    return View("/Views/Account/ConfirmEmail.cshtml", model);
                 }
 
                 foreach(var error in result.Errors)

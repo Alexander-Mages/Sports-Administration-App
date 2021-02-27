@@ -43,7 +43,7 @@ namespace SportsAdministrationApp
             services.AddControllersWithViews();
             //email:
             services.AddSession();
-            services.AddSingleton<IConfiguration>(Configuration);
+            services.AddSingleton<IConfiguration>(_config);
             services.AddTransient<IEmailService, EmailService>();
             //for userrepository implementation dependency injection
             //services.AddScoped<IUserRepository, SQLUserRepository>();
