@@ -17,17 +17,30 @@ namespace SportsAdministrationApp.Services
         //Email:Password
         //Email:Username
 
+
         private IConfiguration _configuration;
+
         private SmtpClient _client;
+
         public EmailService(IConfiguration configuration)
         {
             _configuration = configuration;
+
+            //appsecrets debug:
+            //Console.WriteLine(_configuration["Email:Password"]);
+            //Console.WriteLine(_configuration["Email:From"]);
+            //Console.WriteLine(_configuration["Email:Host"]);
+            //Console.WriteLine(_configuration["Email:Port"]);
+            //Console.WriteLine(_configuration["Email:Username"]);
+
             _client = new SmtpClient(_configuration["Email:Host"], Convert.ToInt32(_configuration["Email:Port"]));
+            _client.UseDefaultCredentials = false;
             _client.Credentials = new NetworkCredential(_configuration["Email:Username"], _configuration["Email:Password"]);
             _client.EnableSsl = true;
         }
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
+
             using (MailMessage mailMessage = new MailMessage(_configuration["Email:From"],
                 email,
                 subject,

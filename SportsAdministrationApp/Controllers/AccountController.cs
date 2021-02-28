@@ -34,7 +34,7 @@ namespace SportsAdministrationApp.Controllers
         //TESTING, REMOVE AFTER USE
         public IActionResult EMAILTEST()
         {
-            emailService.SendAuthEmail("magespaula@gmail.com", "this is a test");
+            emailService.SendAuthEmail("", "This is a test");
             return View();
         }
 
