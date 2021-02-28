@@ -30,17 +30,6 @@ namespace SportsAdministrationApp.Controllers
         }
 
 
-
-        //TESTING, REMOVE AFTER USE
-        public IActionResult EMAILTEST()
-        {
-            emailService.SendAuthEmail("", "This is a test");
-            return View();
-        }
-
-
-
-
         //LOGOUT
         public async Task<IActionResult> Logout()
         {
