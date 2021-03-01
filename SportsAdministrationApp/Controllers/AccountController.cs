@@ -56,7 +56,6 @@ namespace SportsAdministrationApp.Controllers
                     var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                     var confirmationLink = Url.Action("ConfirmEmail", "Account",
                                             new { userId = user.Id, token = token }, Request.Scheme);
-
                     //logger.Log(LogLevel.Warning, confirmationLink);
                     //sends confirmation email, ^to log for debug
                     Console.WriteLine(user.Email);
@@ -104,6 +103,70 @@ namespace SportsAdministrationApp.Controllers
             ViewBag.ErrorTitle = "Email cannot be confirmed";
             return View("Error");
         }
+
+
+
+
+
+
+
+
+
+
+
+
+        //TWO FACTOR AUTHENTICATION
+        [HttpGet]
+        public IActionResult TwoFactorAuth()
+        {
+            return View();
+        }
+        //[HttpPost]
+        //public Task<IActionResult> TwoFactorAuth(TwoFactorAuthViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+
+
+        //        if (result.Succeeded)
+        //        {
+        //            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        //            var confirmationLink = Url.Action("ConfirmEmail", "Account",
+        //                                    new { userId = user.Id, token = token }, Request.Scheme);
+        //            //logger.Log(LogLevel.Warning, confirmationLink);
+        //            //sends confirmation email, ^to log for debug
+        //            Console.WriteLine(user.Email);
+        //            Console.WriteLine(confirmationLink);
+
+        //            emailService.SendAuthEmail(user.Email, confirmationLink);
+
+        //            //await signInManager.SignInAsync(user, isPersistent: false);
+        //            if (signInManager.IsSignedIn(User))
+        //            {
+        //                return RedirectToAction("index", "home");
+        //            }
+
+        //            return View("/Views/Account/ConfirmEmail.cshtml", model);
+        //        }
+
+        //        foreach (var error in result.Errors)
+        //        {
+        //            ModelState.AddModelError("", error.Description);
+        //        }
+        //    }
+        //    return View(model);
+        //}
+
+
+
+
+
+
+
+
+
+
+
 
         //LOGIN
         [HttpGet]

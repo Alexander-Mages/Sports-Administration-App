@@ -1,6 +1,10 @@
 ﻿@model SportsAdministrationApp.ViewModels.HomeDetailsViewModel 
 <html>
 <head>
+
+
+
+    <!--This page is broken-->
     <title></title>
 </head>
 <body>
@@ -15,7 +19,7 @@
         <a asp-controller="home" asp-action="index" class="btn btn-primary">Back</a>
         <a asp-action="edit" asp-controller="home"
            asp-route-id="@Model.User.Id" class="btn btn-primary">Edit</a>
-        <a href="#" class="btn btn-danger">Delete</a>
+        <a asp-controller="Account" asp-action="Edit" asp-route-id="@Model.User.Id" class="btn btn-danger">Delete</a>
     </div>
 </body>
 </html>
