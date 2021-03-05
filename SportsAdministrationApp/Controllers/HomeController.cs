@@ -45,7 +45,12 @@ namespace SportsAdministrationApp.Controllers
                 User = await _userManager.FindByIdAsync(id),
                 PageTitle = "User Details"
             };
-            return View(homeDetailsViewModel);
+            
+            if (id != null)
+            {
+                return View(homeDetailsViewModel);
+            }
+            return View("error.cshtml", homeDetailsViewModel);
         }
 
         //EDIT SPECIFIC USER DETAILS

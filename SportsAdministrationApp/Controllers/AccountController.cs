@@ -121,6 +121,8 @@ namespace SportsAdministrationApp.Controllers
         {
             return View();
         }
+
+        //copied and pasted from another method, for modification
         //[HttpPost]
         //public Task<IActionResult> TwoFactorAuth(TwoFactorAuthViewModel model)
         //{
@@ -217,7 +219,7 @@ namespace SportsAdministrationApp.Controllers
                     emailService.SendAuthEmail(user.Email, passwordResetLink);
                     return View("ForgotPasswordConfirmation");
                 }
-                return View("ForgotPasswordConfirmation");
+                //return View("ForgotPasswordConfirmation");
             }
             return View(model);
         }
