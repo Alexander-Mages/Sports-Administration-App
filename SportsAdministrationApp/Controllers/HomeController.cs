@@ -68,6 +68,7 @@ namespace SportsAdministrationApp.Controllers
             return View(editViewModel);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditViewModel model)
         {
             if (ModelState.IsValid)
@@ -86,6 +87,7 @@ namespace SportsAdministrationApp.Controllers
 
         //Delete User
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id)
         {
             var user = await _userManager.FindByIdAsync(id);

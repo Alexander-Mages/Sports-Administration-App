@@ -1,4 +1,4 @@
-﻿@model SportsAdministrationApp.ViewModels.HomeDetailsViewModel 
+﻿@model SportsAdministrationApp.ViewModels.HomeDetailsViewModel
 <html>
 <head>
 
@@ -13,7 +13,7 @@
     <div class="card-body text-center">
         <h4>Name : @Model.User.Name</h4>
         <h4>Email : @Model.User.Email</h4>
-        <h4>Team : @Model.User.Team</h4> 
+        <h4>Team : @Model.User.Team</h4>
     </div>
     <div class="card-footer text-center">
         <a asp-controller="home" asp-action="index" class="btn btn-primary">Back</a>
@@ -42,3 +42,4 @@
     </div>
 </body>
 </html>
+@Html.AntiForgeryToken()
