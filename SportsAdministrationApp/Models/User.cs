@@ -12,9 +12,13 @@ namespace SportsAdministrationApp.Models
         [Required]
         [MaxLength(50, ErrorMessage = "Name cannot exceed 50 characters")]
         public string Name { get; set; }
-        
+
         [Required]
         public string Team { get; set; }
+
+
+        public AthleteData AthleteData { get; set; }
+        public int AthleteDataId { get; set; }
         
     }
 }

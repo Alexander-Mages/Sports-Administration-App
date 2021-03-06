@@ -18,4 +18,8 @@
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.10.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Administration\" />
+  </ItemGroup>
+
 </Project>

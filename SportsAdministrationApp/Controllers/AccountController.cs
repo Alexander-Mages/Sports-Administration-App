@@ -49,7 +49,12 @@ namespace SportsAdministrationApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = model.Email, Email = model.Email, Name=model.Name, Team=model.Team };
+                AthleteData d = new AthleteData() { Score = 100 };
+                Times t = new Times() { Name = "Initial", PersonalRecord = 30 };
+                d.Times = new List<Times>();
+                d.Times.Add(t);
+
+                var user = new User { UserName = model.Email, Email = model.Email, Name=model.Name, Team=model.Team, AthleteData = d};
                 var result = await userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
@@ -104,71 +109,6 @@ namespace SportsAdministrationApp.Controllers
             ViewBag.ErrorTitle = "Email cannot be confirmed";
             return View("Error");
         }
-
-
-
-
-
-
-
-
-
-
-
-
-        //TWO FACTOR AUTHENTICATION
-        [HttpGet]
-        public IActionResult TwoFactorAuth()
-        {
-            return View();
-        }
-
-        //copied and pasted from another method, for modification
-        //[HttpPost]
-        //public Task<IActionResult> TwoFactorAuth(TwoFactorAuthViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-
-
-        //        if (result.Succeeded)
-        //        {
-        //            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-        //            var confirmationLink = Url.Action("ConfirmEmail", "Account",
-        //                                    new { userId = user.Id, token = token }, Request.Scheme);
-        //            //logger.Log(LogLevel.Warning, confirmationLink);
-        //            //sends confirmation email, ^to log for debug
-        //            Console.WriteLine(user.Email);
-        //            Console.WriteLine(confirmationLink);
-
-        //            emailService.SendAuthEmail(user.Email, confirmationLink);
-
-        //            //await signInManager.SignInAsync(user, isPersistent: false);
-        //            if (signInManager.IsSignedIn(User))
-        //            {
-        //                return RedirectToAction("index", "home");
-        //            }
-
-        //            return View("/Views/Account/ConfirmEmail.cshtml", model);
-        //        }
-
-        //        foreach (var error in result.Errors)
-        //        {
-        //            ModelState.AddModelError("", error.Description);
-        //        }
-        //    }
-        //    return View(model);
-        //}
-
-
-
-
-
-
-
-
-
-
 
 
         //LOGIN

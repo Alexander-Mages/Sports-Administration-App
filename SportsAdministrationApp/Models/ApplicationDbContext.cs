@@ -12,9 +12,11 @@ namespace SportsAdministrationApp.Models
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-
+            Database.EnsureCreated();
         }
-        public new DbSet<User> Users { get; set; }
+        public DbSet<User> User { get; set; }
+        public DbSet<AthleteData> AthleteData { get; set; }
+        public DbSet<Times> Times { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

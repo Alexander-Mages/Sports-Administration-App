@@ -10,6 +10,7 @@ namespace SportsAdministrationApp.Models
     {
         public static void Seed(this ModelBuilder modelBuilder)
         {
+            //Seed users here
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
