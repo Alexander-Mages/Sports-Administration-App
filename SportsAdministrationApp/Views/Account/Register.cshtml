@@ -20,7 +20,7 @@
                 <select name="Team" id="Team">
                     <option value="Swim">Swim</option>
                     <option value="Tennis">Tennis</option>
-                </select>                
+                </select>
                 <span asp-validation-for="Team" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -42,3 +42,4 @@
         </form>
     </div>
 </div>
+@Html.AntiForgeryToken()
