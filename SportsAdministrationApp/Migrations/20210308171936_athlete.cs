@@ -2,15 +2,28 @@
 
 namespace SportsAdministrationApp.Migrations
 {
-    public partial class athletedata : Migration
+    public partial class athlete : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "AthleteDataId",
+                name: "PersonalRecordId",
                 table: "AspNetUsers",
                 type: "INTEGER",
                 nullable: true);
+
+            migrationBuilder.CreateTable(
+                name: "PersonalRecord",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    PR = table.Column<decimal>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PersonalRecord", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "AthleteData",
@@ -18,31 +31,18 @@ namespace SportsAdministrationApp.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Score = table.Column<int>(type: "INTEGER", nullable: false)
+                    Location = table.Column<string>(type: "TEXT", nullable: true),
+                    FromPersonalRecordId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Time = table.Column<decimal>(type: "TEXT", nullable: false),
+                    PersonalRecordId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AthleteData", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Times",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    FromAthleteDataId = table.Column<int>(type: "INTEGER", nullable: false),
-                    PersonalRecord = table.Column<int>(type: "INTEGER", nullable: false),
-                    AthleteDataId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Times", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Times_AthleteData_AthleteDataId",
-                        column: x => x.AthleteDataId,
-                        principalTable: "AthleteData",
+                        name: "FK_AthleteData_PersonalRecord_PersonalRecordId",
+                        column: x => x.PersonalRecordId,
+                        principalTable: "PersonalRecord",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -52,30 +52,30 @@ namespace SportsAdministrationApp.Migrations
                 keyColumn: "Id",
                 keyValue: "1",
                 columns: new[] { "ConcurrencyStamp", "SecurityStamp" },
-                values: new object[] { "deeba6cc-a62c-4133-8e8c-3b135be541e0", "93063428-5068-48d2-8936-f09701c1bc09" });
+                values: new object[] { "5ed08d13-77af-45c4-ae0f-ae12c15cd835", "b36c102c-2563-4532-a58f-13815a8b5371" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "2",
                 columns: new[] { "ConcurrencyStamp", "SecurityStamp" },
-                values: new object[] { "e5e91685-5795-445e-ad27-e471f7f8f438", "979978cb-bfd5-4caa-beb3-e0e5c71a5e15" });
+                values: new object[] { "607e4f27-1706-4076-a490-c40e1217ca44", "a3d1a4c5-552d-457c-9f8d-25707250349b" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_AthleteDataId",
+                name: "IX_AspNetUsers_PersonalRecordId",
                 table: "AspNetUsers",
-                column: "AthleteDataId");
+                column: "PersonalRecordId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Times_AthleteDataId",
-                table: "Times",
-                column: "AthleteDataId");
+                name: "IX_AthleteData_PersonalRecordId",
+                table: "AthleteData",
+                column: "PersonalRecordId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUsers_AthleteData_AthleteDataId",
+                name: "FK_AspNetUsers_PersonalRecord_PersonalRecordId",
                 table: "AspNetUsers",
-                column: "AthleteDataId",
-                principalTable: "AthleteData",
+                column: "PersonalRecordId",
+                principalTable: "PersonalRecord",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
         }
@@ -83,21 +83,21 @@ namespace SportsAdministrationApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUsers_AthleteData_AthleteDataId",
+                name: "FK_AspNetUsers_PersonalRecord_PersonalRecordId",
                 table: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Times");
 
             migrationBuilder.DropTable(
                 name: "AthleteData");
 
+            migrationBuilder.DropTable(
+                name: "PersonalRecord");
+
             migrationBuilder.DropIndex(
-                name: "IX_AspNetUsers_AthleteDataId",
+                name: "IX_AspNetUsers_PersonalRecordId",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "AthleteDataId",
+                name: "PersonalRecordId",
                 table: "AspNetUsers");
 
             migrationBuilder.UpdateData(
@@ -105,14 +105,14 @@ namespace SportsAdministrationApp.Migrations
                 keyColumn: "Id",
                 keyValue: "1",
                 columns: new[] { "ConcurrencyStamp", "SecurityStamp" },
-                values: new object[] { "b3ed3e44-0c39-4062-9ca6-05dc1e02334f", "1793ae2f-4f0a-456a-9eeb-bd758d0315a0" });
+                values: new object[] { "d4c9e679-29c3-4a22-b0af-9b9cb0fc3dcb", "fd8d37aa-3208-418a-8586-a2186cdf50b2" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "2",
                 columns: new[] { "ConcurrencyStamp", "SecurityStamp" },
-                values: new object[] { "e37809a8-a028-4206-85cf-fea5aac5814b", "6e260a9a-2c82-40ed-a6c0-26bacee45e99" });
+                values: new object[] { "71be973a-35f8-4e04-9ad0-8797230d54aa", "6774f208-ab85-44b2-a94d-3f19dd50064b" });
         }
     }
 }

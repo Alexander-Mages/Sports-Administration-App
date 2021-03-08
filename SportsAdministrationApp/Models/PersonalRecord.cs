@@ -8,8 +8,7 @@ namespace SportsAdministrationApp.Models
     public class PersonalRecord
     {
         public int Id { get; set; }
-        public decimal Time { get; set; }
-
+        public decimal PR { get; set; }
         public List<AthleteData> AthleteData { get; set; }
     }
 }

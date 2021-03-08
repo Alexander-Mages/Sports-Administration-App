@@ -21,8 +21,6 @@ namespace SportsAdministrationApp.Models
          
         public PersonalRecord PersonalRecord { get; set; }
         public int PersonalRecordId { get; set; }
-        //public AthleteData AthleteData { get; set; }
-        //public int AthleteDataId { get; set; }
         
     }
 }

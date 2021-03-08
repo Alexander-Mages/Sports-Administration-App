@@ -9,8 +9,8 @@ using SportsAdministrationApp.Models;
 namespace SportsAdministrationApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210217180619_idek")]
-    partial class idek
+    [Migration("20210308171936_athlete")]
+    partial class athlete
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -65,6 +65,76 @@ namespace SportsAdministrationApp.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -146,32 +216,50 @@ namespace SportsAdministrationApp.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("SportsAdministrationApp.Models.AthleteData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("FromPersonalRecordId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PersonalRecordId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Time")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonalRecordId");
+
+                    b.ToTable("AthleteData");
+                });
+
+            modelBuilder.Entity("SportsAdministrationApp.Models.PersonalRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("PR")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PersonalRecord");
+                });
+
             modelBuilder.Entity("SportsAdministrationApp.Models.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Identification")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
+                    b.Property<string>("Code")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -179,78 +267,49 @@ namespace SportsAdministrationApp.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
+                    b.Property<int>("PersonalRecordId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Team")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("INTEGER");
+                    b.HasIndex("PersonalRecordId");
 
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex");
-
-                    b.ToTable("AspNetUsers");
+                    b.HasDiscriminator().HasValue("User");
 
                     b.HasData(
                         new
                         {
-                            Id = "e4aa26c9-6597-4d58-88c4-2793a60f11e7",
+                            Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "37723d57-82c0-424c-b9a4-ac0ed4db7ccb",
+                            ConcurrencyStamp = "5ed08d13-77af-45c4-ae0f-ae12c15cd835",
                             Email = "John@gmail.com",
                             EmailConfirmed = false,
-                            Identification = 1,
                             LockoutEnabled = false,
-                            Name = "John",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "03b523ba-6ab9-4d6b-8364-5bf5584d971a",
-                            Team = "Swim",
-                            TwoFactorEnabled = false
+                            SecurityStamp = "b36c102c-2563-4532-a58f-13815a8b5371",
+                            TwoFactorEnabled = true,
+                            UserName = "John@gmail.com",
+                            Name = "John",
+                            PersonalRecordId = 0,
+                            Team = "Swim"
                         },
                         new
                         {
-                            Id = "21233d93-6e43-4777-bb98-fcdbe82def2a",
+                            Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5629c208-bfee-4b8a-a482-abd0a23ec746",
+                            ConcurrencyStamp = "607e4f27-1706-4076-a490-c40e1217ca44",
                             Email = "Bill@gmail.com",
                             EmailConfirmed = false,
-                            Identification = 2,
                             LockoutEnabled = false,
-                            Name = "Bill",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2491156b-9f22-4839-90de-ec3f7275d2ba",
-                            Team = "Tennis",
-                            TwoFactorEnabled = false
+                            SecurityStamp = "a3d1a4c5-552d-457c-9f8d-25707250349b",
+                            TwoFactorEnabled = false,
+                            UserName = "Bill@gmail.com",
+                            Name = "Bill",
+                            PersonalRecordId = 0,
+                            Team = "Tennis"
                         });
                 });
 
@@ -265,7 +324,7 @@ namespace SportsAdministrationApp.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("SportsAdministrationApp.Models.User", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -274,7 +333,7 @@ namespace SportsAdministrationApp.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("SportsAdministrationApp.Models.User", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -289,7 +348,7 @@ namespace SportsAdministrationApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SportsAdministrationApp.Models.User", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -298,11 +357,38 @@ namespace SportsAdministrationApp.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("SportsAdministrationApp.Models.User", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SportsAdministrationApp.Models.AthleteData", b =>
+                {
+                    b.HasOne("SportsAdministrationApp.Models.PersonalRecord", "PersonalRecord")
+                        .WithMany("AthleteData")
+                        .HasForeignKey("PersonalRecordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PersonalRecord");
+                });
+
+            modelBuilder.Entity("SportsAdministrationApp.Models.User", b =>
+                {
+                    b.HasOne("SportsAdministrationApp.Models.PersonalRecord", "PersonalRecord")
+                        .WithMany()
+                        .HasForeignKey("PersonalRecordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PersonalRecord");
+                });
+
+            modelBuilder.Entity("SportsAdministrationApp.Models.PersonalRecord", b =>
+                {
+                    b.Navigation("AthleteData");
                 });
 #pragma warning restore 612, 618
         }

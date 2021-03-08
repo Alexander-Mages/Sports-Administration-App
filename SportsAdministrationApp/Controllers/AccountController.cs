@@ -116,7 +116,7 @@ namespace SportsAdministrationApp.Controllers
                 //dbContext.Add(pr1);
                 //await dbContext.SaveChangesAsync();
 
-                PersonalRecord r = new PersonalRecord() { Time = 30 };
+                PersonalRecord r = new PersonalRecord() { PR = 30 };
                 AthleteData d = new AthleteData() { Location = "Random Natatorium", Time = 29 };
                 r.AthleteData = new List<AthleteData>();
                 r.AthleteData.Add(d);

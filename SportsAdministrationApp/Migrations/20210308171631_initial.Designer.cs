@@ -9,8 +9,8 @@ using SportsAdministrationApp.Models;
 namespace SportsAdministrationApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210214222250_AddingIdentity")]
-    partial class AddingIdentity
+    [Migration("20210308171631_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -79,6 +79,10 @@ namespace SportsAdministrationApp.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -129,6 +133,8 @@ namespace SportsAdministrationApp.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -212,12 +218,9 @@ namespace SportsAdministrationApp.Migrations
 
             modelBuilder.Entity("SportsAdministrationApp.Models.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
+                    b.Property<string>("Code")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -229,22 +232,36 @@ namespace SportsAdministrationApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
+                    b.HasDiscriminator().HasValue("User");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = "1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "d4c9e679-29c3-4a22-b0af-9b9cb0fc3dcb",
                             Email = "John@gmail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "fd8d37aa-3208-418a-8586-a2186cdf50b2",
+                            TwoFactorEnabled = true,
+                            UserName = "John@gmail.com",
                             Name = "John",
                             Team = "Swim"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = "2",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "71be973a-35f8-4e04-9ad0-8797230d54aa",
                             Email = "Bill@gmail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "6774f208-ab85-44b2-a94d-3f19dd50064b",
+                            TwoFactorEnabled = false,
+                            UserName = "Bill@gmail.com",
                             Name = "Bill",
                             Team = "Tennis"
                         });

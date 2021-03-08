@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SportsAdministrationApp.Migrations
 {
-    public partial class AddingIdentity : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,6 +26,10 @@ namespace SportsAdministrationApp.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Discriminator = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
+                    Team = table.Column<string>(type: "TEXT", nullable: true),
+                    Code = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -153,9 +157,14 @@ namespace SportsAdministrationApp.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "Email", "Name", "Team" },
-                values: new object[] { 2, "Bill@gmail.com", "Bill", "Tennis" });
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "Code", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Team", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "1", 0, null, "d4c9e679-29c3-4a22-b0af-9b9cb0fc3dcb", "User", "John@gmail.com", false, false, null, "John", null, null, null, null, false, "fd8d37aa-3208-418a-8586-a2186cdf50b2", "Swim", true, "John@gmail.com" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "Code", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Team", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "2", 0, null, "71be973a-35f8-4e04-9ad0-8797230d54aa", "User", "Bill@gmail.com", false, false, null, "Bill", null, null, null, null, false, "6774f208-ab85-44b2-a94d-3f19dd50064b", "Tennis", false, "Bill@gmail.com" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -217,11 +226,6 @@ namespace SportsAdministrationApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DeleteData(
-                table: "Users",
-                keyColumn: "Id",
-                keyValue: 2);
         }
     }
 }
