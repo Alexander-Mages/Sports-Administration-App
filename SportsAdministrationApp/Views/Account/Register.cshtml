@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "User Registration";
 }
+<script src="Scripts/jquery-1.8.2.min.js" type="text/javascript"></script>
 
 <h1>User Registration</h1>
 
@@ -34,9 +35,36 @@
                 <input asp-for="ConfirmPassword" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
-            <div>
-                <span>Would you like to enable Two Factor Authentication? (Strongly Recommended) </span>@Html.CheckBox("TwoFactorEnabled", true)
-            </div>
+
+            <!--       <script type="text/javascript">
+               function displayDiv() {
+                   if ($("#<%= TwoFactorEnabled.ClientID %>").val() == "true") {
+                       $("#2faopts").show();
+                   }
+                   else {
+                       $("#2faopts").hide();
+                   }
+               }
+           </script>
+
+           <div class="form-element">-->
+            <span>Would you like to enable Two Factor Authentication? (Strongly Recommended) </span>@Html.CheckBox("TwoFactorEnabled", true)
+            <!-- <input checked="checked"
+               onchange="displayDiv()"
+               id="TwoFactorEnabled"
+               name="TwoFactorEnabled"
+               type="checkbox"
+               value="false" />
+    </div>
+    <div id="2faopts" class="form-element" style="display:none;">
+        <label>What 2FA implementation would you like to use?</label>
+        <select class="form-control" id="TwoFactorImplementation" name="TwoFactorImplementation">
+            <option>Please select</option>
+            <option>TOTP</option>
+            <option>Email</option>
+
+        </select>
+    </div> -->
             <br />
             <div class="g-recaptcha" data-sitekey="@ViewData["ReCaptchaKey"]"></div>
 

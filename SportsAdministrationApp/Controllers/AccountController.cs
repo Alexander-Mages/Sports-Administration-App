@@ -16,6 +16,10 @@ using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.Configuration;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Http;
+using AspNetCore.Totp;
+using Google.Authenticator;
+using AspNetCore.Totp.Interface;
+using System.Text;
 
 namespace SportsAdministrationApp.Controllers
 {
@@ -28,6 +32,8 @@ namespace SportsAdministrationApp.Controllers
         private readonly ApplicationDbContext dbContext;
         private readonly IConfiguration configuration;
 
+        private readonly ITotpValidator totpValidator;
+        private readonly ITotpGenerator totpGenerator;
         public AccountController(UserManager<User> userManager,
                                  SignInManager<User> signInManager,
                                  ILogger<AccountController> logger,
@@ -41,6 +47,8 @@ namespace SportsAdministrationApp.Controllers
             this.emailService = emailService;
             this.dbContext = dbContext;
             this.configuration = configuration;
+            this.totpGenerator = new TotpGenerator();
+            this.totpValidator = new TotpValidator(this.totpGenerator);
         }
 
 
@@ -74,6 +82,24 @@ namespace SportsAdministrationApp.Controllers
             return code.ToString("D6");
         }
 
+        static string RandomString(int len)
+        {
+            const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            StringBuilder result = new StringBuilder();
+            using (RNGCryptoServiceProvider Generator = new RNGCryptoServiceProvider())
+            {
+                byte[] uintBuffer = new byte[sizeof(uint)];
+
+                while (len-- > 0)
+                {
+                    Generator.GetBytes(uintBuffer);
+                    uint num = BitConverter.ToUInt32(uintBuffer, 0);
+                    result.Append(valid[(int)(num % (uint)valid.Length)]);
+                }
+            }
+
+            return result.ToString();
+        }
 
 
 
@@ -98,41 +124,25 @@ namespace SportsAdministrationApp.Controllers
                     return View(model);
                 }
 
-                //AthleteData d = new AthleteData() { TopPR = 100 };
-                //dbContext.Add(d);
-                //await dbContext.SaveChangesAsync();
-                //PRs t = new PRs() { Name = "initial", Time = 30 };
-                //t.AthleteDataId = d.Id;
-                //dbContext.Add(t);
-                //await dbContext.SaveChangesAsync();
 
-                ////d.PRs = new List<PRs>();
-                ////d.PRs.Add(t)
-
-                //d.TopPR = 50;
-                //dbContext.Update(d);
-
-                //PRs pr1 = new PRs() { Name = "new personal record", Time = 29 };
-                //dbContext.Add(pr1);
-                //await dbContext.SaveChangesAsync();
 
                 PersonalRecord r = new PersonalRecord() { PR = 30 };
                 AthleteData d = new AthleteData() { Location = "Random Natatorium", Time = 29 };
                 r.AthleteData = new List<AthleteData>();
                 r.AthleteData.Add(d);
 
-                var user = new User { UserName = model.Email, Email = model.Email, Name=model.Name, /*Team=model.Team,*/ TwoFactorEnabled=model.TwoFactorEnabled, PersonalRecord = r};
+                var user = new User { UserName = model.Email, Email = model.Email, Name=model.Name, TwoFactorEnabled=model.TwoFactorEnabled, PersonalRecord=r, TotpEnabled=model.TotpEnabled};
                 if (model.Team != "team")
                 {
-
+                    user.Team = "swim";
                 }
                 var result = await userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
-                    if (user.TwoFactorEnabled == true)
+                    if (user.TwoFactorEnabled == true && user.TotpEnabled == true)
                     {
-                        
+                        return View("SetUpTotp");
                     }
                     var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                     var confirmationLink = Url.Action("ConfirmEmail", "Account",
@@ -207,8 +217,67 @@ namespace SportsAdministrationApp.Controllers
             }
         }
 
+        public async Task<IActionResult> SetUpTotp(TotpConfirmViewModel model)
+        {
+            User user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
+            HttpContext.Session.SetString("Id", user.Id);
+            string randomKey = RandomString(25);
+            var totpSetupGenerator = new TotpSetupGenerator();
+            var totpSetup = totpSetupGenerator.Generate("SportsAdministrationApp", user.Name, "randomKey", 300, 300);
+            string qrCodeImageUrl = totpSetup.QrCodeImage;
+            string manualEntrySetupCode = totpSetup.ManualSetupKey;
+            model.TotpSetupCode = manualEntrySetupCode;
+            model.QrCodeUrl = qrCodeImageUrl;
+            user.QrCodeUrl = qrCodeImageUrl;
+            user.TotpSetupCode = manualEntrySetupCode;
+            //to pass data into View
+            User usr = new User
+            {
+                TotpSetupCode = manualEntrySetupCode,
+                QrCodeUrl = qrCodeImageUrl
+            };
+            ViewBag.Message = usr;
+            user.TotpConfigured = true;
+            return View();
+        }
+
+
+        [HttpGet]
+        public IActionResult TotpConfirm(string QrCodeUrl, string TotpSetupCode)
+        {
+            return View();
+        }
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> TotpConfirm(TotpConfirmViewModel model)
+        {
+            User user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
+            int code = model.Code;
+            string randomKey = user.randomKey;
+            bool valid = this.totpValidator.Validate(randomKey, code);
+
+            if (valid == true)
+            {
+                await signInManager.SignInAsync(user, true);
+                return RedirectToAction("index", "home");
+            }
+            if (valid == false)
+            {
+                ModelState.AddModelError(string.Empty, "2FA code invalid");
+
+                return View();
+            }
+            return View();
+        }
+
+
+        public IActionResult EnableTotp()
+        {
+            return View();
+        }
 
         //LOGIN
+
         [HttpGet]
         public IActionResult Login()
         {
@@ -234,7 +303,7 @@ namespace SportsAdministrationApp.Controllers
                 {
                     var checkResult = await signInManager.CheckPasswordSignInAsync(user, model.Password, true);
 
-                    if (checkResult.Succeeded && user.TwoFactorEnabled == true)
+                    if (checkResult.Succeeded && user.TwoFactorEnabled == true && user.TotpEnabled == false)
                     {
                         string TwoFactorCode = GenerateSecureCode();
                         emailService.SendTwoFactorCode(user.Email, TwoFactorCode);
@@ -242,8 +311,19 @@ namespace SportsAdministrationApp.Controllers
                         await userManager.UpdateAsync(user);
                         HttpContext.Session.SetString("Id", user.Id);
                         return RedirectToAction("TwoFactorConfirm", "account");
+
                     }
-                    
+                    if (checkResult.Succeeded && user.TwoFactorEnabled == true && user.TotpEnabled == true && user.TotpConfigured == true)
+                    {
+                        HttpContext.Session.SetString("Id", user.Id);
+                        return View("TotpConfirm");
+                    }
+                    if (checkResult.Succeeded && user.TwoFactorEnabled == true && user.TotpEnabled == true && user.TotpConfigured == false)
+                    {
+                        HttpContext.Session.SetString("Id", user.Id);
+                        return View("SetUpTotp");
+                    }
+
                     if (checkResult.Succeeded && user.TwoFactorEnabled == false)
                     {
                         var signInResult = await signInManager.PasswordSignInAsync(model.Email, model.Password,

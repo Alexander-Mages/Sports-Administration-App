@@ -18,5 +18,7 @@ namespace SportsAdministrationApp.ViewModels
 
         [Display(Name = "Remember Me")]
         public bool RememberMe { get; set; }
+        public string QrCodeUrl { get; set; }
+        public string TotpSetupCode { get; set; }
     }
 }

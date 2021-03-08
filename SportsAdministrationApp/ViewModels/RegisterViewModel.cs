@@ -17,6 +17,9 @@ namespace SportsAdministrationApp.ViewModels
         public string Team { get; set; }
 
         public bool TwoFactorEnabled { get; set; }
+        public bool TotpEnabled { get; set; }
+        public string QrCodeUrl { get; set; }
+        public string TotpSetupCode { get; set; }
 
         [Required]
         [EmailAddress]
@@ -31,5 +34,6 @@ namespace SportsAdministrationApp.ViewModels
         [Compare("Password",
             ErrorMessage = "Password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+        
     }
 }

@@ -15,10 +15,13 @@ namespace SportsAdministrationApp.Models
 
         [Required]
         public string Team { get; set; }
-
+        public bool TotpConfigured { get; set; }
         public string Code { get; set; }
+        public bool TotpEnabled { get; set; }
+        public string randomKey { get; set; }
 
-         
+        public string TotpSetupCode { get; set; }
+        public string QrCodeUrl { get; set; }
         public PersonalRecord PersonalRecord { get; set; }
         public int PersonalRecordId { get; set; }
         
