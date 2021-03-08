@@ -15,20 +15,38 @@ namespace SportsAdministrationApp.Models
                 new User
                 {
                     Id = "1",
+                    //AthleteDataId = 2,
+                    TwoFactorEnabled = true,
                     Name = "John",
                     Team = "Swim",
                     Email = "John@gmail.com",
-                    UserName= "John@gmail.com"
+                    UserName = "John@gmail.com"
                 },
                 new User
                 {
                     Id = "2",
+                    //AthleteDataId = 1,
                     Name = "Bill",
                     Team = "Tennis",
                     Email = "Bill@gmail.com",
-                    UserName= "Bill@gmail.com"
+                    UserName = "Bill@gmail.com"
                 }
             );
+            //seed teams here
+            //modelBuilder.Entity<Team>().HasData(
+            //    new Team
+            //    {
+            //        Name = "Swim",
+            //        HeadCoach = "Mr. Foo",
+            //        TeamCode = "Swim12345"
+            //    },
+            //    new Team
+            //    {
+            //        Name = "Tennis",
+            //        HeadCoach = "Mr. Bar",
+            //        TeamCode = "Tennis12345"
+            //    }
+            //    );
         }
     }
 }

@@ -16,9 +16,13 @@ namespace SportsAdministrationApp.Models
         [Required]
         public string Team { get; set; }
 
+        public string Code { get; set; }
 
-        public AthleteData AthleteData { get; set; }
-        public int AthleteDataId { get; set; }
+         
+        public PersonalRecord PersonalRecord { get; set; }
+        public int PersonalRecordId { get; set; }
+        //public AthleteData AthleteData { get; set; }
+        //public int AthleteDataId { get; set; }
         
     }
 }

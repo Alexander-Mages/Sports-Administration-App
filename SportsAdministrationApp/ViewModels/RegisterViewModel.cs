@@ -16,6 +16,8 @@ namespace SportsAdministrationApp.ViewModels
         [Required]
         public string Team { get; set; }
 
+        public bool TwoFactorEnabled { get; set; }
+
         [Required]
         [EmailAddress]
         public string Email { get; set; }

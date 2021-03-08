@@ -28,6 +28,8 @@
                     </label>
                 </div>
             </div>
+            <div class="g-recaptcha" data-sitekey="@ViewData["ReCaptchaKey"]"></div>
+
             <button type="submit" class="btn btn-primary">Login</button>
             <div>
                 <a asp-action="ForgotPassword">Forgot Password?</a>
@@ -36,3 +38,6 @@
     </div>
 </div>
 @Html.AntiForgeryToken()
+@section Scripts {
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+}

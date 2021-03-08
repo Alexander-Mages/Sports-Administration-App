@@ -9,5 +9,7 @@ namespace SportsAdministrationApp.Services
     public interface IEmailService : IEmailSender
     {
         public void SendAuthEmail(string email, string link);
+        public void SendTwoFactorCode(string email, string code);
+        public void SendPasswordResetLink(string email, string code);
     }
 }

@@ -37,11 +37,13 @@ namespace SportsAdministrationApp
                 options.Password.RequiredLength = 8;
                 options.Password.RequiredUniqueChars = 3;
                 options.SignIn.RequireConfirmedEmail = true;
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
             }).AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
-            //email:
+
             services.AddSession();
             services.AddSingleton<IConfiguration>(_config);
             services.AddTransient<IEmailService, EmailService>();

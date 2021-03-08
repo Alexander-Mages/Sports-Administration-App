@@ -60,7 +60,15 @@ namespace SportsAdministrationApp.Services
 
         public void SendAuthEmail(string email, string link)
         {
-            SendEmailAsync(email, "Sports Administration App,", $"click here to confirm your email: {link}");
+            SendEmailAsync(email, "Sports Administration App: Please confirm email", $"click here to confirm your email: {link}");
+        }
+        public void SendTwoFactorCode(string email, string code)
+        {
+            SendEmailAsync(email, "Sports Administration App: Your 2FA code", $"Your two factor authentication code is: {code}\nplease input this code to login");
+        }
+        public void SendPasswordResetLink(string email, string link)
+        {
+            SendEmailAsync(email, "Sports Administration App: Password Reset", $"click here to reset your password: {link}\nIf you have not requested a password change, you can safely discard this email");
         }
     }
 }
