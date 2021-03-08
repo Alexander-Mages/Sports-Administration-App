@@ -13,12 +13,10 @@
   },
 
   "GoogleReCaptcha": {
-    "key": "6LdMvXUaAAAAAGWNPKPbVxWT7zPprFQ31juzlxaK",
-    "secret": "6LdMvXUaAAAAAJCXCEjLn8oblouXOYGdICtW9s95"
+    "key": "insert site key here",
+    "secret": "insert secret key here"
 
   }
 
 
 }
-
-
