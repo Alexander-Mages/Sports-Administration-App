@@ -17,7 +17,6 @@ using Microsoft.Extensions.Configuration;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Http;
 using AspNetCore.Totp;
-using Google.Authenticator;
 using AspNetCore.Totp.Interface;
 using System.Text;
 
