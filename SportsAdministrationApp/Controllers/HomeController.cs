@@ -11,11 +11,10 @@ using System.Threading.Tasks;
 
 namespace SportsAdministrationApp.Controllers
 {
-    //currently a controller for everything but account, remember to specialize it later if it gets too large
+    //THIS CONTROLLER IS ENTIRELY REDUNDANT, REMOVE WHEN SPECIALIZING THE CONTROLLERS
     public class HomeController : Controller
     {
-        //uncomment when logger is needed, commented to supress warning
-        //private readonly ILogger<HomeController> _logger;
+     
 
         private readonly UserManager<User> _userManager;
         public HomeController(UserManager<User> userManager)
