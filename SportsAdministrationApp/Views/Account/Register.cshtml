@@ -2,10 +2,8 @@
 @{
     ViewBag.Title = "User Registration";
 }
-<script src="Scripts/jquery-1.8.2.min.js" type="text/javascript"></script>
 
 <h1>User Registration</h1>
-
 <div class="row">
     <div class="col-md-12">
         <form method="post">
@@ -35,6 +33,7 @@
                 <input asp-for="ConfirmPassword" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
+            <!--JQUERY, Dynamic showing of optionsˇ -->
             <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
             <script>
                 $(document).ready(function () {
@@ -51,31 +50,24 @@
                 <label><input id="TwoFactorEnabled" type="radio" name="TwoFactorEnabled" value="true"> Yes</label>
                 <label><input id="TwoFactorEnabled" type="radio" name="TwoFactorEnabled" value="false"> No</label>
             </div>
-
-
             <div style="display:none" class="true box">
                 <span>What implementation of 2FA would you like?</span>
                 <select class="form-control" id="TotpEnabled" name="TotpEnabled">
                     <option value="true">Google Authenticator</option>
                     <option value="false">Email</option>
-                </select>            
+                </select>
             </div>
             <div style="display:none" class="false box">
                 <label>If you choose not to enable Two Factor Authentication, you can turn it on later by visiting account settings.</label>
             </div>
-                <br />
-                <div class="g-recaptcha" data-sitekey="@ViewData["ReCaptchaKey"]"></div>
+            <!--End JQUERY magic-->
+            <br />
+            <div class="g-recaptcha" data-sitekey="@ViewData["ReCaptchaKey"]"></div>
 
-                <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-primary">Register</button>
         </form>
     </div>
 </div>
-
-
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
-
-
 @Html.AntiForgeryToken()
 @section Scripts {
     <script src='https://www.google.com/recaptcha/api.js'></script>

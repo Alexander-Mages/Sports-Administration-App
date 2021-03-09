@@ -1,14 +1,10 @@
 ﻿@model SportsAdministrationApp.ViewModels.LoginViewModel
-
 @{
     ViewBag.Title = "User Login";
 }
-
 <h1>User Login</h1>
-
 <div class="row">
     <div class="col-md-12">
-        
        <form method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
@@ -30,7 +26,6 @@
                 </div>
             </div>
             <div class="g-recaptcha" data-sitekey="@ViewData["ReCaptchaKey"]"></div>
-
             <button type="submit" class="btn btn-primary">Login</button>
             <div>
                 <a asp-action="ForgotPassword">Forgot Password?</a>
