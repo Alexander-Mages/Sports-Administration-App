@@ -1,0 +1,45 @@
+﻿@model SportsAdministrationApp.ViewModels.HomeDetailsViewModel
+<html>
+<head>
+
+
+
+    <!--This page is broken-->
+    <title></title>
+</head>
+<body>
+    <h3>@ViewBag.PageTitle</h3>
+
+    <div class="card-body text-center">
+        <h4>Name : @Model.User.Name</h4>
+        <h4>Email : @Model.User.Email</h4>
+        <h4>Team : @Model.User.Team</h4>
+    </div>
+    <div class="card-footer text-center">
+        <a asp-controller="administration" asp-action="index" class="btn btn-primary">Back</a>
+        <a asp-action="edit" asp-controller="administration"
+           asp-route-id="@Model.User.Id" class="btn btn-primary">Edit</a>
+
+
+
+
+
+        <form method="post" asp-action="Delete" asp-route-id="@Model.User.Id">
+
+            <span id="confirmDeleteSpan_@Model.User.Id" style="display:none">
+                <span>Are you sure you want to delete?</span>
+                <button type="submit" class="btn btn-danger">Yes</button>
+                <a href="#" class="btn btn-primary"
+                   onclick="confirmDelete('SportsAdministrationApp', false)">No</a>
+            </span>
+
+            <span id="deleteSpan_@Model.User.Id">
+                <a href="#" class="btn btn-danger"
+                   onclick="confirmDelete('@Model.User.Id', true)">Delete</a>
+            </span>
+        </form>
+
+    </div>
+</body>
+</html>
+@Html.AntiForgeryToken()

@@ -1,0 +1,42 @@
+﻿@model IEnumerable<SportsAdministrationApp.Models.User>
+<-- -->User Details Page, displays details of all users</-->
+<html>
+<head>
+    <title>Employee List</title>
+</head>
+<body>
+    <div class="row">
+        @foreach (var user in Model)
+        {
+            <div class="card m-3" style="width: 400px;">
+                <div class="card-header">
+                    <h3>@user.Name</h3>
+                </div>
+                <div class="card-body" text-center>
+                    <a asp-controller="administration" asp-action="details" asp-route-id="@user.Id" class="btn btn-primary">View</a>
+                    <a asp-controller="administration" asp-action="edit" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
+
+                    <form method="post" asp-action="Delete" asp-route-id="@user.Id">
+
+                        <span id="confirmDeleteSpan_@user.Id" style="display:none">
+                            <span>Are you sure you want to delete?</span>
+                            <button type="submit" class="btn btn-danger">Yes</button>
+                            <a href="#" class="btn btn-primary"
+                               onclick="confirmDelete('@user.Id', false)">No</a>
+                        </span>
+
+                        <span id="deleteSpan_@user.Id">
+                            <a href="#" class="btn btn-danger"
+                               onclick="confirmDelete('@user.Id', true)">Delete</a>
+                        </span>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+</html>
+@section Scripts {
+    <script src="~/js/site.js"></script>
+}
+@Html.AntiForgeryToken()
