@@ -137,17 +137,20 @@ namespace SportsAdministrationApp.Controllers
                 }
                 var result = await userManager.CreateAsync(user, model.Password);
 
+                var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                var confirmationLink = Url.Action("ConfirmEmail", "Account",
+                                        new { userId = user.Id, token = token }, Request.Scheme);
+
+                emailService.SendAuthEmail(user.Email, confirmationLink);
+
                 if (result.Succeeded)
                 {
                     if (user.TwoFactorEnabled == true && user.TotpEnabled == true)
                     {
-                        return View("SetUpTotp");
+                        HttpContext.Session.SetString("Id", user.Id);
+                        return RedirectToAction("SetUpTotp");
                     }
-                    var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var confirmationLink = Url.Action("ConfirmEmail", "Account",
-                                            new { userId = user.Id, token = token }, Request.Scheme);
-                    
-                    emailService.SendAuthEmail(user.Email, confirmationLink);
+
 
                     //await signInManager.SignInAsync(user, isPersistent: false);
                     if (signInManager.IsSignedIn(User))
@@ -205,10 +208,14 @@ namespace SportsAdministrationApp.Controllers
         public async Task<IActionResult> TwoFactorConfirm(TwoFactorConfirmViewModel model)
         {
             User user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
-            if (user.Code == model.Code)
+            if (user.Code == model.Code && user.EmailConfirmed == true)
             {
                 await signInManager.SignInAsync(user, true);
                 return RedirectToAction("Index", "Home");
+            }
+            if (user.Code == model.Code && user.EmailConfirmed == false)
+            {
+                return RedirectToAction("ConfirmEmail", "Account");
             }
             else
             {
@@ -216,27 +223,33 @@ namespace SportsAdministrationApp.Controllers
             }
         }
 
-        public async Task<IActionResult> SetUpTotp(TotpConfirmViewModel model)
+ 
+        public async Task<IActionResult> SetUpTotp(TotpData model)
         {
             User user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
-            HttpContext.Session.SetString("Id", user.Id);
-            string randomKey = RandomString(25);
-            var totpSetupGenerator = new TotpSetupGenerator();
-            var totpSetup = totpSetupGenerator.Generate("SportsAdministrationApp", user.Name, "randomKey", 300, 300);
-            string qrCodeImageUrl = totpSetup.QrCodeImage;
-            string manualEntrySetupCode = totpSetup.ManualSetupKey;
-            model.TotpSetupCode = manualEntrySetupCode;
-            model.QrCodeUrl = qrCodeImageUrl;
-            user.QrCodeUrl = qrCodeImageUrl;
-            user.TotpSetupCode = manualEntrySetupCode;
-            //to pass data into View
-            User usr = new User
+            if (user.TotpConfigured == false)
             {
-                TotpSetupCode = manualEntrySetupCode,
-                QrCodeUrl = qrCodeImageUrl
-            };
-            ViewBag.Message = usr;
-            user.TotpConfigured = true;
+                HttpContext.Session.SetString("Id", user.Id);
+                string randomKey = RandomString(25);
+                var totpSetupGenerator = new TotpSetupGenerator();
+                var totpSetup = totpSetupGenerator.Generate("SportsAdministrationApp", user.Name, randomKey, 300, 300);
+                string qrCodeImageUrl = totpSetup.QrCodeImage;
+                string manualEntrySetupCode = totpSetup.ManualSetupKey;
+                model.TotpSetupCode = manualEntrySetupCode;
+                model.QrCodeUrl = qrCodeImageUrl;
+                user.QrCodeUrl = qrCodeImageUrl;
+                user.TotpSetupCode = manualEntrySetupCode;
+                user.randomKey = randomKey;
+                //to pass data into View
+                TotpData dta = new TotpData
+                {
+                    TotpSetupCode = manualEntrySetupCode,
+                    QrCodeUrl = qrCodeImageUrl
+                };
+                user.TotpConfigured = true;
+                await userManager.UpdateAsync(user);
+                return View(dta);
+            }
             return View();
         }
 
@@ -255,7 +268,7 @@ namespace SportsAdministrationApp.Controllers
             string randomKey = user.randomKey;
             bool valid = this.totpValidator.Validate(randomKey, code);
 
-            if (valid == true)
+            if (valid == true && user.EmailConfirmed == true)
             {
                 await signInManager.SignInAsync(user, true);
                 return RedirectToAction("index", "home");
@@ -323,7 +336,7 @@ namespace SportsAdministrationApp.Controllers
                         return View("SetUpTotp");
                     }
 
-                    if (checkResult.Succeeded && user.TwoFactorEnabled == false)
+                    if (checkResult.Succeeded && user.TwoFactorEnabled == false && user.EmailConfirmed == true)
                     {
                         var signInResult = await signInManager.PasswordSignInAsync(model.Email, model.Password,
                             model.RememberMe, true);
