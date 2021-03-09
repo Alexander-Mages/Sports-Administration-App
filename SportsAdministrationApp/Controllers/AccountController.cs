@@ -273,6 +273,10 @@ namespace SportsAdministrationApp.Controllers
                 await signInManager.SignInAsync(user, true);
                 return RedirectToAction("index", "home");
             }
+            if (valid == true && user.EmailConfirmed == false)
+            {
+                ModelState.AddModelError(string.Empty, "Please confirm your email and try again.");
+            }
             if (valid == false)
             {
                 ModelState.AddModelError(string.Empty, "2FA code invalid");
@@ -328,7 +332,7 @@ namespace SportsAdministrationApp.Controllers
                     if (checkResult.Succeeded && user.TwoFactorEnabled == true && user.TotpEnabled == true && user.TotpConfigured == true)
                     {
                         HttpContext.Session.SetString("Id", user.Id);
-                        return View("TotpConfirm");
+                        return RedirectToAction("TotpConfirm");
                     }
                     if (checkResult.Succeeded && user.TwoFactorEnabled == true && user.TotpEnabled == true && user.TotpConfigured == false)
                     {

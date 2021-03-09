@@ -20,10 +20,6 @@ namespace SportsAdministrationApp.Controllers
         {
             return View();
         }
-        //[HttpPost]
-        //public async Task<IActionResult> GenerateTeam(string code)
-        //{
-         //   return View();
-        //}
+
     }
 }
