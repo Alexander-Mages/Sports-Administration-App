@@ -11,12 +11,9 @@ using System.Threading.Tasks;
 
 namespace SportsAdministrationApp.Controllers
 {
-    //currently a controller for everything but account, remember to specialize it later if it gets too large
+    //THIS CONTROLLER IS ENTIRELY REDUNDANT, REMOVE WHEN SPECIALIZING THE CONTROLLERS
     public class HomeController : Controller
     {
-        //uncomment when logger is needed, commented to supress warning
-        //private readonly ILogger<HomeController> _logger;
-
         private readonly UserManager<User> _userManager;
         public HomeController(UserManager<User> userManager)
         {
@@ -29,29 +26,26 @@ namespace SportsAdministrationApp.Controllers
             var model = _userManager.Users.ToList();
             return View(model);
         }
+        //END INDEX
 
-        //PRIVACY POLICY
-        public IActionResult Privacy()
-        {
-            return View();
-        }
 
         //DETAILS OF SPECIFIC USER BY ID
         public async Task<IActionResult> Details(string id)
         {
-            
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
                 User = await _userManager.FindByIdAsync(id),
                 PageTitle = "User Details"
             };
-            
             if (id != null)
             {
                 return View(homeDetailsViewModel);
             }
             return View("error.cshtml", homeDetailsViewModel);
         }
+        //END DETAILS
+
+
 
         //EDIT SPECIFIC USER DETAILS
         [HttpGet]
@@ -77,13 +71,12 @@ namespace SportsAdministrationApp.Controllers
                 user.Name = model.Name;
                 user.Email = model.Email;
                 user.Team = model.Team;
-
-
                 await _userManager.UpdateAsync(user);
                 return RedirectToAction("index");
             }
             return View();
         }
+        //END EDIT
 
         //Delete User
         [HttpPost]
@@ -110,11 +103,16 @@ namespace SportsAdministrationApp.Controllers
                 return View("Index");
             }
         }
+        //END DELETE
 
+
+
+        //ERROR FUNCTIONALITY
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        //END ERROR
     }
 }

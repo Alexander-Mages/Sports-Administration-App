@@ -12,13 +12,11 @@ namespace SportsAdministrationApp.ViewModels
         [Required]
         [MaxLength(50, ErrorMessage = "Name cannot exceed 50 characters")]
         public string Name { get; set; }
-
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
         [Required]
         public string Team { get; set; }
-
         public string Id { get; set; }
         //for correct implementation
         //public User User { get; set; }

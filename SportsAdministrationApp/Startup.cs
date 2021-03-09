@@ -28,10 +28,8 @@ namespace SportsAdministrationApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<ApplicationDbContext>(
+            services.AddDbContextPool<ApplicationDbContext>( //Defined in appsettings.json?
                 options => options.UseSqlite(_config.GetConnectionString("UserDBConnection")));
-
-
             services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 8;
@@ -41,9 +39,7 @@ namespace SportsAdministrationApp
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
             }).AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
             services.AddControllersWithViews();
-
             services.AddSession();
             services.AddSingleton<IConfiguration>(_config);
             services.AddTransient<IEmailService, EmailService>();
@@ -66,15 +62,10 @@ namespace SportsAdministrationApp
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            
             app.UseAuthentication();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseSession();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

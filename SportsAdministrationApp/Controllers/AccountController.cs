@@ -51,6 +51,7 @@ namespace SportsAdministrationApp.Controllers
         }
 
 
+
         //PRIVATE METHODS
         public static bool ReCaptchaPassed(string gRecaptchaResponse, string secret, ILogger logger)
         {
@@ -61,14 +62,12 @@ namespace SportsAdministrationApp.Controllers
                 logger.LogError("Error while sending request to ReCaptcha");
                 return false;
             }
-
             string JSONres = res.Content.ReadAsStringAsync().Result;
             dynamic JSONdata = JObject.Parse(JSONres);
             if (JSONdata.success != "true")
             {
                 return false;
             }
-
             return true;
         }
         private string GenerateSecureCode()
@@ -88,7 +87,6 @@ namespace SportsAdministrationApp.Controllers
             using (RNGCryptoServiceProvider Generator = new RNGCryptoServiceProvider())
             {
                 byte[] uintBuffer = new byte[sizeof(uint)];
-
                 while (len-- > 0)
                 {
                     Generator.GetBytes(uintBuffer);
@@ -96,10 +94,9 @@ namespace SportsAdministrationApp.Controllers
                     result.Append(valid[(int)(num % (uint)valid.Length)]);
                 }
             }
-
             return result.ToString();
         }
-
+        //END PRIVATE METHODS
 
 
         //REGISTER
@@ -122,42 +119,35 @@ namespace SportsAdministrationApp.Controllers
                     ModelState.AddModelError(string.Empty, "Sorry sir, no bots allowed");
                     return View(model);
                 }
-
-
-
+                //Databaseˇ
                 PersonalRecord r = new PersonalRecord() { PR = 30 };
                 AthleteData d = new AthleteData() { Location = "Random Natatorium", Time = 29 };
                 r.AthleteData = new List<AthleteData>();
                 r.AthleteData.Add(d);
-
+                //Database^ (far from finished)
                 var user = new User { UserName = model.Email, Email = model.Email, Name=model.Name, TwoFactorEnabled=model.TwoFactorEnabled, PersonalRecord=r, TotpEnabled=model.TotpEnabled};
                 if (model.Team != "team")
                 {
                     user.Team = "swim";
                 }
                 var result = await userManager.CreateAsync(user, model.Password);
-
+                var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                var confirmationLink = Url.Action("ConfirmEmail", "Account",
+                                        new { userId = user.Id, token = token }, Request.Scheme);
+                emailService.SendAuthEmail(user.Email, confirmationLink);
                 if (result.Succeeded)
                 {
                     if (user.TwoFactorEnabled == true && user.TotpEnabled == true)
                     {
-                        return View("SetUpTotp");
+                        HttpContext.Session.SetString("Id", user.Id);
+                        return RedirectToAction("SetUpTotp");
                     }
-                    var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var confirmationLink = Url.Action("ConfirmEmail", "Account",
-                                            new { userId = user.Id, token = token }, Request.Scheme);
-                    
-                    emailService.SendAuthEmail(user.Email, confirmationLink);
-
-                    //await signInManager.SignInAsync(user, isPersistent: false);
                     if (signInManager.IsSignedIn(User))
                     {
                         return RedirectToAction("index", "home");
                     }
-
                     return View("/Views/Account/ConfirmEmail.cshtml", model);
                 }
-
                 foreach(var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
@@ -165,118 +155,11 @@ namespace SportsAdministrationApp.Controllers
             }
             return View(model);
         }
+        //END REGISTER
 
 
-
-
-        //CONFIRM EMAIL
-        [HttpGet]
-        public async Task<IActionResult> ConfirmEmail(string userId, string token)
-        {
-            if (userId == null || token == null)
-            {
-                return RedirectToAction("index", "home");
-            }
-            var user = await userManager.FindByIdAsync(userId);
-
-            if (user == null)
-            {
-                ViewBag.ErrorMessage = $"The User ID {userId} is invalid";
-                return View("NotFound");
-            }
-            var result = await userManager.ConfirmEmailAsync(user, token);
-            if (result.Succeeded)
-            {
-                return View("EmailConfirmed");
-            }
-            ViewBag.ErrorTitle = "Email cannot be confirmed";
-            return View("Error");
-        }
-
-
-        //TWO FACTOR AUTHENTICATION
-
-        [HttpGet]
-        public IActionResult TwoFactorConfirm()
-        {
-            return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> TwoFactorConfirm(TwoFactorConfirmViewModel model)
-        {
-            User user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
-            if (user.Code == model.Code)
-            {
-                await signInManager.SignInAsync(user, true);
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                return RedirectToAction("Login", "Account");
-            }
-        }
-
-        public async Task<IActionResult> SetUpTotp(TotpConfirmViewModel model)
-        {
-            User user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
-            HttpContext.Session.SetString("Id", user.Id);
-            string randomKey = RandomString(25);
-            var totpSetupGenerator = new TotpSetupGenerator();
-            var totpSetup = totpSetupGenerator.Generate("SportsAdministrationApp", user.Name, "randomKey", 300, 300);
-            string qrCodeImageUrl = totpSetup.QrCodeImage;
-            string manualEntrySetupCode = totpSetup.ManualSetupKey;
-            model.TotpSetupCode = manualEntrySetupCode;
-            model.QrCodeUrl = qrCodeImageUrl;
-            user.QrCodeUrl = qrCodeImageUrl;
-            user.TotpSetupCode = manualEntrySetupCode;
-            //to pass data into View
-            User usr = new User
-            {
-                TotpSetupCode = manualEntrySetupCode,
-                QrCodeUrl = qrCodeImageUrl
-            };
-            ViewBag.Message = usr;
-            user.TotpConfigured = true;
-            return View();
-        }
-
-
-        [HttpGet]
-        public IActionResult TotpConfirm(string QrCodeUrl, string TotpSetupCode)
-        {
-            return View();
-        }
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public async Task<IActionResult> TotpConfirm(TotpConfirmViewModel model)
-        {
-            User user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
-            int code = model.Code;
-            string randomKey = user.randomKey;
-            bool valid = this.totpValidator.Validate(randomKey, code);
-
-            if (valid == true)
-            {
-                await signInManager.SignInAsync(user, true);
-                return RedirectToAction("index", "home");
-            }
-            if (valid == false)
-            {
-                ModelState.AddModelError(string.Empty, "2FA code invalid");
-
-                return View();
-            }
-            return View();
-        }
-
-
-        public IActionResult EnableTotp()
-        {
-            return View();
-        }
 
         //LOGIN
-
         [HttpGet]
         public IActionResult Login()
         {
@@ -291,17 +174,15 @@ namespace SportsAdministrationApp.Controllers
             {
                 ViewData["ReCaptchaKey"] = configuration.GetSection("GoogleReCaptcha:key").Value;
                 if (!ReCaptchaPassed(Request.Form["g-recaptcha-response"], //gets recaptcha response and checks it
-    configuration.GetSection("GoogleReCaptcha:secret").Value, logger))
+                    configuration.GetSection("GoogleReCaptcha:secret").Value, logger))
                 {
                     ModelState.AddModelError(string.Empty, "Sorry sir, no bots allowed");
                     return View(model);
                 }
-
                 var user = await userManager.FindByEmailAsync(model.Email);
                 if (user != null && await userManager.IsEmailConfirmedAsync(user))
                 {
                     var checkResult = await signInManager.CheckPasswordSignInAsync(user, model.Password, true);
-
                     if (checkResult.Succeeded && user.TwoFactorEnabled == true && user.TotpEnabled == false)
                     {
                         string TwoFactorCode = GenerateSecureCode();
@@ -310,24 +191,21 @@ namespace SportsAdministrationApp.Controllers
                         await userManager.UpdateAsync(user);
                         HttpContext.Session.SetString("Id", user.Id);
                         return RedirectToAction("TwoFactorConfirm", "account");
-
                     }
                     if (checkResult.Succeeded && user.TwoFactorEnabled == true && user.TotpEnabled == true && user.TotpConfigured == true)
                     {
                         HttpContext.Session.SetString("Id", user.Id);
-                        return View("TotpConfirm");
+                        return RedirectToAction("TotpConfirm");
                     }
                     if (checkResult.Succeeded && user.TwoFactorEnabled == true && user.TotpEnabled == true && user.TotpConfigured == false)
                     {
                         HttpContext.Session.SetString("Id", user.Id);
                         return View("SetUpTotp");
                     }
-
-                    if (checkResult.Succeeded && user.TwoFactorEnabled == false)
+                    if (checkResult.Succeeded && user.TwoFactorEnabled == false && user.EmailConfirmed == true)
                     {
                         var signInResult = await signInManager.PasswordSignInAsync(model.Email, model.Password,
                             model.RememberMe, true);
-
                         if (signInResult.Succeeded)
                         {
                             return RedirectToAction("index", "home");
@@ -337,14 +215,12 @@ namespace SportsAdministrationApp.Controllers
                             return View("AccountLocked");
                         }
                     }
-
                 }
                 ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
-                
             }
             return View(model);
         }
-
+        //END LOGIN
 
         //LOGOUT
         public async Task<IActionResult> Logout()
@@ -352,10 +228,132 @@ namespace SportsAdministrationApp.Controllers
             await signInManager.SignOutAsync();
             return RedirectToAction("index", "home");
         }
+        //
 
 
 
+        //CONFIRM EMAIL
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+            {
+                return RedirectToAction("index", "home");
+            }
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"The User ID {userId} is invalid";
+                return View("NotFound");
+            }
+            var result = await userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return View("EmailConfirmed");
+            }
+            ViewBag.ErrorTitle = "Email cannot be confirmed";
+            return View("Error");
+        }
+        //END CONFIRM EMAIL
 
+
+
+        //TWO FACTOR AUTHENTICATION
+        [HttpGet]
+        public IActionResult TwoFactorConfirm()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> TwoFactorConfirm(TwoFactorConfirmViewModel model)
+        {
+            User user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
+            if (user.Code == model.Code && user.EmailConfirmed == true)
+            {
+                await signInManager.SignInAsync(user, true);
+                return RedirectToAction("Index", "Home");
+            }
+            if (user.Code == model.Code && user.EmailConfirmed == false)
+            {
+                return RedirectToAction("ConfirmEmail", "Account");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+        }
+        //END TWO FACTOR AUTHENTICATION
+ 
+
+
+        //TOTP CONFIGURATION/SETUP
+        public async Task<IActionResult> SetUpTotp(TotpData model)
+        {
+            User user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
+            if (user.TotpConfigured == false)
+            {
+                HttpContext.Session.SetString("Id", user.Id);
+                string randomKey = RandomString(25);
+                var totpSetupGenerator = new TotpSetupGenerator();
+                var totpSetup = totpSetupGenerator.Generate("SportsAdministrationApp", user.Name, randomKey, 300, 300);
+                string qrCodeImageUrl = totpSetup.QrCodeImage;
+                string manualEntrySetupCode = totpSetup.ManualSetupKey;
+                model.TotpSetupCode = manualEntrySetupCode;
+                model.QrCodeUrl = qrCodeImageUrl;
+                user.QrCodeUrl = qrCodeImageUrl;
+                user.TotpSetupCode = manualEntrySetupCode;
+                user.randomKey = randomKey;
+                //to pass data into View
+                TotpData dta = new TotpData
+                {
+                    TotpSetupCode = manualEntrySetupCode,
+                    QrCodeUrl = qrCodeImageUrl
+                };
+                user.TotpConfigured = true;
+                await userManager.UpdateAsync(user);
+                return View(dta);
+            }
+            return View();
+        }
+        //END TOTP CONFIGURATION/SETUP
+
+
+        
+        //TOTP CODE VALIDATION
+        [HttpGet]
+        public IActionResult TotpConfirm(string QrCodeUrl, string TotpSetupCode)
+        {
+            return View();
+        }
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> TotpConfirm(TotpConfirmViewModel model)
+        {
+            User user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
+            int code = model.Code;
+            string randomKey = user.randomKey;
+            bool valid = this.totpValidator.Validate(randomKey, code);
+            if (valid == true && user.EmailConfirmed == true)
+            {
+                await signInManager.SignInAsync(user, true);
+                return RedirectToAction("index", "home");
+            }
+            if (valid == true && user.EmailConfirmed == false)
+            {
+                ModelState.AddModelError(string.Empty, "Please confirm your email and try again.");
+            }
+            if (valid == false)
+            {
+                ModelState.AddModelError(string.Empty, "2FA code invalid");
+
+                return View();
+            }
+            return View();
+        }
+        //END TOTP CODE VALIDATION
+
+
+      
         //FORGOT PASSWORD
         [HttpGet]
         public IActionResult ForgotPassword()
@@ -371,20 +369,17 @@ namespace SportsAdministrationApp.Controllers
             {
                 ViewData["ReCaptchaKey"] = configuration.GetSection("GoogleReCaptcha:key").Value;
                 if (!ReCaptchaPassed(Request.Form["g-recaptcha-response"], //gets recaptcha response and checks it
-configuration.GetSection("GoogleReCaptcha:secret").Value, logger))
+                    configuration.GetSection("GoogleReCaptcha:secret").Value, logger))
                 {
                     ModelState.AddModelError(string.Empty, "Sorry sir, no bots allowed");
                     return View(model);
                 }
-
                 var user = await userManager.FindByEmailAsync(model.Email);
                 if (user != null && await userManager.IsEmailConfirmedAsync(user))
                 {
                     var token = await userManager.GeneratePasswordResetTokenAsync(user);
-
                     var passwordResetLink = Url.Action("ResetPassword", "Account",
                         new { email = model.Email, token = token }, Request.Scheme);
-
                     //logger.Log(LogLevel.Warning, passwordResetLink);
                     emailService.SendPasswordResetLink(user.Email, passwordResetLink);
                     return View("ForgotPasswordConfirmation");
@@ -393,16 +388,16 @@ configuration.GetSection("GoogleReCaptcha:secret").Value, logger))
             }
             return View(model);
         }
-
-        //CHANGE PASSWORD
+        //CHANGE PASSWORD (redundant but useful)
         public IActionResult ChangePassword()
         {
             return View("ForgotPassword");
         }
+        //END FORGOT PASSWORD
 
 
 
-        //RESET PASSWORD
+        //RESET PASSWORD (backend for all forgot password functionality)
         [HttpGet]
         public IActionResult ResetPassword(string token, string email)
         {
@@ -440,7 +435,6 @@ configuration.GetSection("GoogleReCaptcha:secret").Value, logger))
             }
             return View(model);
         }
-
 
     }
 }
