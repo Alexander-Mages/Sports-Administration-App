@@ -57,7 +57,7 @@ namespace SportsAdministrationApp.Controllers
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                Team = user.Team,
+                //Team = user.Team,
             };
             return View(editViewModel);
         }
@@ -70,7 +70,7 @@ namespace SportsAdministrationApp.Controllers
                 var user = await _userManager.FindByIdAsync(model.Id);
                 user.Name = model.Name;
                 user.Email = model.Email;
-                user.Team = model.Team;
+                //user.Team = model.Team;
                 await _userManager.UpdateAsync(user);
                 return RedirectToAction("index");
             }

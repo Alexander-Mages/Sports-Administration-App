@@ -30,7 +30,7 @@ namespace SportsAdministrationApp.Controllers
         private readonly IEmailService emailService;
         private readonly ApplicationDbContext dbContext;
         private readonly IConfiguration configuration;
-
+        private readonly RoleManager<IdentityRole> roleManager;
         private readonly ITotpValidator totpValidator;
         private readonly ITotpGenerator totpGenerator;
         public AccountController(UserManager<User> userManager,
@@ -38,7 +38,8 @@ namespace SportsAdministrationApp.Controllers
                                  ILogger<AccountController> logger,
                                  IEmailService emailService,
                                  ApplicationDbContext dbContext,
-                                 IConfiguration configuration)
+                                 IConfiguration configuration,
+                                 RoleManager<IdentityRole> roleManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -48,6 +49,7 @@ namespace SportsAdministrationApp.Controllers
             this.configuration = configuration;
             this.totpGenerator = new TotpGenerator();
             this.totpValidator = new TotpValidator(this.totpGenerator);
+            this.roleManager = roleManager;
         }
 
 
@@ -126,10 +128,24 @@ namespace SportsAdministrationApp.Controllers
                 r.AthleteData.Add(d);
                 //Database^ (far from finished)
                 var user = new User { UserName = model.Email, Email = model.Email, Name=model.Name, TwoFactorEnabled=model.TwoFactorEnabled, PersonalRecord=r, TotpEnabled=model.TotpEnabled};
-                if (model.Team != "team")
+                
+                Team team = dbContext.Teams.Single(t => t.TeamCode.ToLower() == model.TeamCode.ToLower());
+                if (team != null)
                 {
-                    user.Team = "swim";
+                    user.Team = team;
+
+                    if (model.TeamCode == "coach")
+                    {
+
+                    }
+                    var roleResult = await userManager.AddToRoleAsync(user, Roles.AthleteRole);
+                    if (!roleResult.Succeeded)
+                    {
+                        ModelState.AddModelError(string.Empty, "Sorry sir, no bots allowed");
+                        return RedirectToAction("Register", "Account");
+                    }
                 }
+
                 var result = await userManager.CreateAsync(user, model.Password);
                 var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                 var confirmationLink = Url.Action("ConfirmEmail", "Account",
@@ -298,8 +314,8 @@ namespace SportsAdministrationApp.Controllers
                 var totpSetup = totpSetupGenerator.Generate("SportsAdministrationApp", user.Name, randomKey, 300, 300);
                 string qrCodeImageUrl = totpSetup.QrCodeImage;
                 string manualEntrySetupCode = totpSetup.ManualSetupKey;
-                model.TotpSetupCode = manualEntrySetupCode;
-                model.QrCodeUrl = qrCodeImageUrl;
+                //model.TotpSetupCode = manualEntrySetupCode;
+                //model.QrCodeUrl = qrCodeImageUrl;
                 user.QrCodeUrl = qrCodeImageUrl;
                 user.TotpSetupCode = manualEntrySetupCode;
                 user.randomKey = randomKey;
@@ -434,6 +450,11 @@ namespace SportsAdministrationApp.Controllers
                 return View("ResetPasswordConfirmation");
             }
             return View(model);
+        }
+
+        public IActionResult AccountSettings()
+        {
+            return View();
         }
 
     }

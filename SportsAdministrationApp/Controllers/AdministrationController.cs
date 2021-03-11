@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using SportsAdministrationApp.Models;
+using SportsAdministrationApp.Services;
 using SportsAdministrationApp.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -13,12 +17,84 @@ namespace SportsAdministrationApp.Controllers
     public class AdministrationController : Controller
     {
 
-        private readonly UserManager<User> _userManager;
-        public AdministrationController(UserManager<User> userManager)
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
+        private readonly ApplicationDbContext dbContext;
+        private readonly IConfiguration configuration;
+        private readonly RoleManager<IdentityRole> roleManager;
+
+        public AdministrationController(UserManager<User> userManager,
+                                 SignInManager<User> signInManager,
+                                 ApplicationDbContext dbContext,
+                                 IConfiguration configuration,
+                                 RoleManager<IdentityRole> roleManager)
         {
-            _userManager = userManager;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+            this.dbContext = dbContext;
+            this.configuration = configuration;
+            this.roleManager = roleManager;
         }
 
+
+
+        [AllowAnonymous]
+        public async Task<IActionResult> DebugCreateRole(string RoleName)
+        {
+            //DO NOT USE THIS CODE, DEMONSTRATION ONLY
+            IdentityRole role = new IdentityRole()
+            {
+                Name = RoleName
+            };
+            var result = await roleManager.CreateAsync(role);
+            return RedirectToAction("Index", "Home");
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> AddAdminToFirstUser()
+        {
+            //DO NOT USE THIS CODE, DEMONSTRATION ONLY            
+            User user = await userManager.FindByNameAsync("ncoblentz");
+            var result = await userManager.AddToRoleAsync(user, Roles.AdminRole);
+            return RedirectToAction("Index", "Home");
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
         //INDEX/LIST OF ALL USERS
         public IActionResult Index()
         {
@@ -56,7 +132,7 @@ namespace SportsAdministrationApp.Controllers
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                Team = user.Team,
+                //Team = user.Team,
             };
             return View(editViewModel);
         }
@@ -69,7 +145,7 @@ namespace SportsAdministrationApp.Controllers
                 var user = await _userManager.FindByIdAsync(model.Id);
                 user.Name = model.Name;
                 user.Email = model.Email;
-                user.Team = model.Team;
+                //user.Team = model.Team;
                 await _userManager.UpdateAsync(user);
                 return RedirectToAction("index");
             }
@@ -113,5 +189,6 @@ namespace SportsAdministrationApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
         //END ERROR
+        */
     }
 }

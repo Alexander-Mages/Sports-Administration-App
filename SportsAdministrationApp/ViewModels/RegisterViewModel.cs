@@ -14,8 +14,8 @@ namespace SportsAdministrationApp.ViewModels
         public string Name { get; set; }
 
         [Required]
-        public string Team { get; set; }
-
+        public string TeamCode { get; set; }
+        [Required]
         public bool TwoFactorEnabled { get; set; }
         public bool TotpEnabled { get; set; }
         public string QrCodeUrl { get; set; }

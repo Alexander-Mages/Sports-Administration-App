@@ -17,7 +17,7 @@ namespace SportsAdministrationApp.Models
         public DbSet<User> User { get; set; }
         //public DbSet<AthleteData> AthleteData { get; set; }
         //public DbSet<PRs> PRs { get; set; }
-        //public DbSet<Team> Teams { get; set; }
+        public DbSet<Team> Teams { get; set; }
         public DbSet<PersonalRecord> PersonalRecord { get; set; }
         public DbSet<AthleteData> AthleteData { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
