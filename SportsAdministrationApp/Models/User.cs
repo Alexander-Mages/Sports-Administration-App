@@ -14,6 +14,7 @@ namespace SportsAdministrationApp.Models
         public string Name { get; set; }
 
         public int TeamId { get; set; }
+        public bool Coach { get; set; }
         public Team Team { get; set; }
         [Required]
         public string TeamCode { get; set; }

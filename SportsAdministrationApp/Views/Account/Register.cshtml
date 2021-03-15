@@ -60,7 +60,32 @@
             <div style="display:none" class="false box">
                 <label>If you choose not to enable Two Factor Authentication, you can turn it on later by visiting account settings.</label>
             </div>
-            <!--End JQUERY magic-->
+            <!--End JQUERY magic/start of next-->
+            <script>
+                $(document).ready(function () {
+                    $('input[type="radio"]').click(function () {
+                        var inputValue = $(this).attr("value");
+                        var targetBox = $("." + inputValue);
+                        $(".box").not(targetBox).hide();
+                        $(targetBox).show();
+                    });
+                });
+            </script>
+            <div>
+                <label><input id="CoachEnabled" type="radio" name="CoachEnabled" value="false"> Athlete</label>
+                <label><input id="CoachEnabled" type="radio" name="CoachEnabled" value="true"> Coach</label>
+            </div>
+            <div style="display:none" class="true box">
+                <div class="form-group">
+                    <label asp-for="CoachCode"></label>
+                    <input asp-for="CoachCode" class="form-control" />
+                    <span asp-validation-for="CoachCode" class="text-danger"></span>
+                </div>
+            </div>
+            <div style="display:none" class="false box">
+                <!--code left in case needed in future-->
+            </div>
+            <!--End JQUERY-->
             <br />
             <div class="g-recaptcha" data-sitekey="@ViewData["ReCaptchaKey"]"></div>
 

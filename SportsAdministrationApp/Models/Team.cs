@@ -13,6 +13,6 @@ namespace SportsAdministrationApp.Models
         public string TeamCode { get; set; }
         // change to team code
         public int Id { get; set; }
-
+        public string CoachCode { get; set; }
     }
 }

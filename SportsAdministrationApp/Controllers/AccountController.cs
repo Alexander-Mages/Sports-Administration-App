@@ -128,23 +128,33 @@ namespace SportsAdministrationApp.Controllers
                 r.AthleteData.Add(d);
                 //Database^ (far from finished)
                 var user = new User { UserName = model.Email, Email = model.Email, Name=model.Name, TwoFactorEnabled=model.TwoFactorEnabled, PersonalRecord=r, TotpEnabled=model.TotpEnabled};
-                
+
                 Team team = dbContext.Teams.Single(t => t.TeamCode.ToLower() == model.TeamCode.ToLower());
-                if (team != null)
+                Team coach = dbContext.Teams.Single(t => t.TeamCode.ToLower() == model.CoachCode.ToLower());
+
+                if (team != null && model.CoachEnabled == false)
                 {
                     user.Team = team;
-
-                    if (model.TeamCode == "coach")
-                    {
-
-                    }
                     var roleResult = await userManager.AddToRoleAsync(user, Roles.AthleteRole);
                     if (!roleResult.Succeeded)
                     {
-                        ModelState.AddModelError(string.Empty, "Sorry sir, no bots allowed");
+                        ModelState.AddModelError(string.Empty, "Team Code Invalid");
                         return RedirectToAction("Register", "Account");
                     }
                 }
+                else
+                    if (team != null && model.Coach == true && coach != null)
+                {
+                    user.Team = team;
+                    user.Coach = true;
+                    var roleResult = await userManager.AddToRoleAsync(user, Roles.CoachRole);
+                    if (!roleResult.Succeeded)
+                    {
+                        ModelState.AddModelError(string.Empty, "Coach/Team Code Invalid");
+                        return RedirectToAction("Register", "Account");
+                    }
+                }
+
 
                 var result = await userManager.CreateAsync(user, model.Password);
                 var token = await userManager.GenerateEmailConfirmationTokenAsync(user);

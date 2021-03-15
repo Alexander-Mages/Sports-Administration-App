@@ -47,20 +47,6 @@ namespace SportsAdministrationApp.Models
                     Name = "Tennis",
                     HeadCoach = "Mr. Bar",
                     TeamCode = "Tennis12345"
-                },
-                new Team
-                {
-                    Id = 3,
-                    Name = "Tennis Coach",
-                    HeadCoach = "Tennis coach",
-                    TeamCode = "TennisCoach3231"
-                },
-                new Team
-                {
-                    Id = 4,
-                    Name = "Swim Coach",
-                    HeadCoach = "swim Coach",
-                    TeamCode = "SwimCoach2392"
                 }
                 );
         }
