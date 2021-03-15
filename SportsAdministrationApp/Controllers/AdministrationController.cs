@@ -13,7 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace SportsAdministrationApp.Controllers
-{
+{   [Authorize(Roles = Roles.AdminRole)]
     public class AdministrationController : Controller
     {
 

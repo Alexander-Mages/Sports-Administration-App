@@ -148,7 +148,8 @@ namespace SportsAdministrationApp.Controllers
                     user.Team = team;
                     user.Coach = true;
                     var roleResult = await userManager.AddToRoleAsync(user, Roles.CoachRole);
-                    if (!roleResult.Succeeded)
+                    var AthleteRoleResult = await userManager.AddToRoleAsync(user, Roles.AthleteRole);
+                    if (!roleResult.Succeeded || !AthleteRoleResult.Succeeded)
                     {
                         ModelState.AddModelError(string.Empty, "Coach/Team Code Invalid");
                         return RedirectToAction("Register", "Account");
@@ -248,6 +249,8 @@ namespace SportsAdministrationApp.Controllers
         }
         //END LOGIN
 
+
+        [Authorize(Roles = Roles.AthleteRole)]
         //LOGOUT
         public async Task<IActionResult> Logout()
         {
@@ -286,11 +289,13 @@ namespace SportsAdministrationApp.Controllers
 
         //TWO FACTOR AUTHENTICATION
         [HttpGet]
+        [Authorize(Roles = Roles.AthleteRole)]
         public IActionResult TwoFactorConfirm()
         {
             return View();
         }
         [HttpPost]
+        [Authorize(Roles = Roles.AthleteRole)]
         public async Task<IActionResult> TwoFactorConfirm(TwoFactorConfirmViewModel model)
         {
             User user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
@@ -347,11 +352,13 @@ namespace SportsAdministrationApp.Controllers
         
         //TOTP CODE VALIDATION
         [HttpGet]
+        [Authorize(Roles = Roles.AthleteRole)]
         public IActionResult TotpConfirm(string QrCodeUrl, string TotpSetupCode)
         {
             return View();
         }
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.AthleteRole)]
         [HttpPost]
         public async Task<IActionResult> TotpConfirm(TotpConfirmViewModel model)
         {
@@ -461,7 +468,8 @@ namespace SportsAdministrationApp.Controllers
             }
             return View(model);
         }
-
+        
+        [Authorize(Roles = Roles.AthleteRole)]
         public IActionResult AccountSettings()
         {
             return View();

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SportsAdministrationApp.Models;
@@ -12,6 +13,8 @@ using System.Threading.Tasks;
 namespace SportsAdministrationApp.Controllers
 {
     //THIS CONTROLLER IS ENTIRELY REDUNDANT, REMOVE WHEN SPECIALIZING THE CONTROLLERS
+    //commented because features need to be anonymous for debug
+    //[Authorize(Roles = Roles.CoachRole)]
     public class HomeController : Controller
     {
         private readonly UserManager<User> _userManager;
