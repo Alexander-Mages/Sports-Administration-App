@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SportsAdministrationApp.Models;
@@ -12,6 +13,8 @@ using System.Threading.Tasks;
 namespace SportsAdministrationApp.Controllers
 {
     //THIS CONTROLLER IS ENTIRELY REDUNDANT, REMOVE WHEN SPECIALIZING THE CONTROLLERS
+    //commented because features need to be anonymous for debug
+    //[Authorize(Roles = Roles.CoachRole)]
     public class HomeController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -57,7 +60,7 @@ namespace SportsAdministrationApp.Controllers
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                Team = user.Team,
+                //Team = user.Team,
             };
             return View(editViewModel);
         }
@@ -70,7 +73,7 @@ namespace SportsAdministrationApp.Controllers
                 var user = await _userManager.FindByIdAsync(model.Id);
                 user.Name = model.Name;
                 user.Email = model.Email;
-                user.Team = model.Team;
+                //user.Team = model.Team;
                 await _userManager.UpdateAsync(user);
                 return RedirectToAction("index");
             }

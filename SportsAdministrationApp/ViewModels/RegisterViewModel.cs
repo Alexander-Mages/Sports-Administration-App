@@ -13,14 +13,15 @@ namespace SportsAdministrationApp.ViewModels
         [MaxLength(50, ErrorMessage = "Name cannot exceed 50 characters")]
         public string Name { get; set; }
 
+        public string TeamCode { get; set; }
         [Required]
-        public string Team { get; set; }
-
         public bool TwoFactorEnabled { get; set; }
         public bool TotpEnabled { get; set; }
         public string QrCodeUrl { get; set; }
         public string TotpSetupCode { get; set; }
-
+        public bool CoachEnabled { get; set; }
+        public bool Coach { get; set; }
+        public string CoachCode { get; set; }
         [Required]
         [EmailAddress]
         public string Email { get; set; }

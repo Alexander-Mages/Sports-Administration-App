@@ -13,8 +13,12 @@ namespace SportsAdministrationApp.Models
         [MaxLength(50, ErrorMessage = "Name cannot exceed 50 characters")]
         public string Name { get; set; }
 
+        public int TeamId { get; set; }
+        public bool Coach { get; set; }
+        public Team Team { get; set; }
         [Required]
-        public string Team { get; set; }
+        public string TeamCode { get; set; }
+        //find n replace team to teamcode
         public bool TotpConfigured { get; set; }
         public string Code { get; set; }
         public bool TotpEnabled { get; set; }
