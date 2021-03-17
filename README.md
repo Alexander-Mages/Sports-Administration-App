@@ -20,4 +20,8 @@ The application can also be run through Visual Studio or IIS. For instructions v
 <a href="https://docs.microsoft.com/en-us/visualstudio/get-started/csharp/run-program?view=vs-2019#:~:text=To%20start%20the%20program%2C%20press,If%20that%20succeeds%2C%20great!">here</a>
 
 # Application Usage
-Work in progress
+To register a new user, visit localhost:port/Account/Register
+To Log in, visit localhost:port/Account/login
+### User Management
+To delete/edit users, visit localhost:port/Home/Index
+to see details on particular users, and perform actions on such, visist localhost:port/Home/Details/useridhere
