@@ -1,4 +1,9 @@
 # Sports-Administration-App
+# Downloading
+to clone the repository, and download the application in its current state, use git clone:
+```
+git clone https://github.com/Alexander-Mages/Sports-Administration-App.git
+```
 # Configuration
 To configure the application, you must add ReCaptcha keys to appsecrets.json, and set Dotnet AppSecrets for email credentials.
 ```
