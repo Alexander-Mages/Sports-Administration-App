@@ -39,21 +39,18 @@ namespace SportsAdministrationApp.Models
                     Id = 1,
                     Name = "Swim",
                     HeadCoach = "Mr. Foo",
-                    TeamCode = "Swim12345"
+                    TeamCode = "Swim12345",
+                    CoachCode = "anothacode"
                 },
                 new Team
                 {
                     Id = 2,
                     Name = "Tennis",
                     HeadCoach = "Mr. Bar",
-                    TeamCode = "Tennis12345"
+                    TeamCode = "Tennis12345",
+                    CoachCode = "code"
                 }
                 );
         }
     }
 }
-/*     public string Name { get; set; }
-public string HeadCoach { get; set; }
-public string TeamCode { get; set; }
-// change to team code
-public int Id { get; set; } */

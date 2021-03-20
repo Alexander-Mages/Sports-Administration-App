@@ -10,10 +10,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SportsAdministrationApp.Controllers
-{   [Authorize(Roles = Roles.AdminRole)]
+{   
+    [Authorize(Roles = Roles.AdminRole)]
     public class AdministrationController : Controller
     {
 
@@ -35,6 +38,22 @@ namespace SportsAdministrationApp.Controllers
             this.configuration = configuration;
             this.roleManager = roleManager;
         }
+        static string RandomString(int len)
+        {
+            const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            StringBuilder result = new StringBuilder();
+            using (RNGCryptoServiceProvider Generator = new RNGCryptoServiceProvider())
+            {
+                byte[] uintBuffer = new byte[sizeof(uint)];
+                while (len-- > 0)
+                {
+                    Generator.GetBytes(uintBuffer);
+                    uint num = BitConverter.ToUInt32(uintBuffer, 0);
+                    result.Append(valid[(int)(num % (uint)valid.Length)]);
+                }
+            }
+            return result.ToString();
+        }
 
 
 
@@ -47,17 +66,27 @@ namespace SportsAdministrationApp.Controllers
                 Name = RoleName
             };
             var result = await roleManager.CreateAsync(role);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Administration");
         }
 
-        [AllowAnonymous]
-        public async Task<IActionResult> AddAdminToFirstUser()
-        {
-            //DO NOT USE THIS CODE, DEMONSTRATION ONLY            
-            User user = await userManager.FindByNameAsync("ncoblentz");
-            var result = await userManager.AddToRoleAsync(user, Roles.AdminRole);
-            return RedirectToAction("Index", "Home");
-        }
+        //[AllowAnonymous]
+        //public async Task<IActionResult> AddAdminToFirstUser()
+        //{
+        //    return View();
+        //}
+
+        //[HttpGet]
+        //public IActionResult InviteCoach()
+        //{
+        //    return View();
+        //}
+        //[HttpPost]
+        //public async Task<IActionResult> InviteCoach()
+        //{
+        //    string code = RandomString(10);
+            
+
+        //}
 
 
 
@@ -94,11 +123,10 @@ namespace SportsAdministrationApp.Controllers
 
 
 
-        /*
         //INDEX/LIST OF ALL USERS
         public IActionResult Index()
         {
-            var model = _userManager.Users.ToList();
+            var model = userManager.Users.ToList();
             return View(model);
         }
         //END INDEX
@@ -107,16 +135,16 @@ namespace SportsAdministrationApp.Controllers
         //DETAILS OF SPECIFIC USER BY ID
         public async Task<IActionResult> Details(string id)
         {
-            HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
+            DetailsViewModel DetailsViewModel = new DetailsViewModel()
             {
-                User = await _userManager.FindByIdAsync(id),
+                User = await userManager.FindByIdAsync(id),
                 PageTitle = "User Details"
             };
             if (id != null)
             {
-                return View(homeDetailsViewModel);
+                return View(DetailsViewModel);
             }
-            return View("error.cshtml", homeDetailsViewModel);
+            return View("error.cshtml", DetailsViewModel);
         }
         //END DETAILS
 
@@ -126,7 +154,7 @@ namespace SportsAdministrationApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await userManager.FindByIdAsync(id);
             EditViewModel editViewModel = new EditViewModel
             {
                 Id = user.Id,
@@ -142,11 +170,11 @@ namespace SportsAdministrationApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByIdAsync(model.Id);
+                var user = await userManager.FindByIdAsync(model.Id);
                 user.Name = model.Name;
                 user.Email = model.Email;
                 //user.Team = model.Team;
-                await _userManager.UpdateAsync(user);
+                await userManager.UpdateAsync(user);
                 return RedirectToAction("index");
             }
             return View();
@@ -158,7 +186,7 @@ namespace SportsAdministrationApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id)
         {
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await userManager.FindByIdAsync(id);
             if (user == null)
             {
                 ViewBag.ErrorMessage = $"User with Id {id} cannot be found";
@@ -166,7 +194,7 @@ namespace SportsAdministrationApp.Controllers
             }
             else
             {
-                var result = await _userManager.DeleteAsync(user);
+                var result = await userManager.DeleteAsync(user);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index");
@@ -189,6 +217,5 @@ namespace SportsAdministrationApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
         //END ERROR
-        */
     }
 }

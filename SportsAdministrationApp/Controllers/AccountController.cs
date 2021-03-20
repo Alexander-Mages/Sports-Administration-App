@@ -130,7 +130,7 @@ namespace SportsAdministrationApp.Controllers
                 var user = new User { UserName = model.Email, Email = model.Email, Name=model.Name, TwoFactorEnabled=model.TwoFactorEnabled, PersonalRecord=r, TotpEnabled=model.TotpEnabled};
 
                 Team team = dbContext.Teams.Single(t => t.TeamCode.ToLower() == model.TeamCode.ToLower());
-                Team coach = dbContext.Teams.Single(t => t.TeamCode.ToLower() == model.CoachCode.ToLower());
+                Team coach = dbContext.Teams.Single(t => t.CoachCode.ToLower() == model.CoachCode.ToLower());
 
                 if (team != null && model.CoachEnabled == false)
                 {

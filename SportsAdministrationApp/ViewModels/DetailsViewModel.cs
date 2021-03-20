@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SportsAdministrationApp.ViewModels
 {
-    public class HomeDetailsViewModel
+    public class DetailsViewModel
     {
         public User User { get; set; }
         public string PageTitle { get; set; }
