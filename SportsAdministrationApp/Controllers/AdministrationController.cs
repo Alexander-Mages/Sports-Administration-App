@@ -23,12 +23,16 @@ namespace SportsAdministrationApp.Controllers
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly ApplicationDbContext dbContext;
+        private readonly IEmailService emailService;
+
         private readonly IConfiguration configuration;
         private readonly RoleManager<IdentityRole> roleManager;
 
         public AdministrationController(UserManager<User> userManager,
                                  SignInManager<User> signInManager,
                                  ApplicationDbContext dbContext,
+                                 IEmailService emailService,
+
                                  IConfiguration configuration,
                                  RoleManager<IdentityRole> roleManager)
         {
@@ -37,6 +41,8 @@ namespace SportsAdministrationApp.Controllers
             this.dbContext = dbContext;
             this.configuration = configuration;
             this.roleManager = roleManager;
+            this.emailService = emailService;
+
         }
         static string RandomString(int len)
         {
@@ -58,15 +64,55 @@ namespace SportsAdministrationApp.Controllers
 
 
         [AllowAnonymous]
-        public async Task<IActionResult> DebugCreateRole(string RoleName)
+        public IActionResult CreateRole()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
         {
             //DO NOT USE THIS CODE, DEMONSTRATION ONLY
             IdentityRole role = new IdentityRole()
             {
-                Name = RoleName
+                Name = model.RoleName
             };
             var result = await roleManager.CreateAsync(role);
-            return RedirectToAction("Index", "Administration");
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Administration");
+
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+            return View(model);
+        }
+
+
+
+        public async Task<IActionResult> RoleManagerAsync()
+        {
+            var users = userManager.Users;
+            var roles = roleManager.Roles.ToList();
+            RoleManagerViewModel model = new RoleManagerViewModel();
+            foreach (var role in roles)
+            {
+                RoleDetailsViewModel viewmodel = new RoleDetailsViewModel();
+                viewmodel.Id = role.Id;
+                viewmodel.Name = role.Name;
+                foreach (User user in users)
+                {
+                    if (await userManager.IsInRoleAsync(user, role.Name))
+                    {
+                        viewmodel.Users.Add(user);
+                    }
+                }
+                model.Roles.Add(viewmodel);
+            }
+            return View(model);
+
         }
 
         //[AllowAnonymous]
@@ -75,18 +121,24 @@ namespace SportsAdministrationApp.Controllers
         //    return View();
         //}
 
-        //[HttpGet]
-        //public IActionResult InviteCoach()
-        //{
-        //    return View();
-        //}
-        //[HttpPost]
-        //public async Task<IActionResult> InviteCoach()
-        //{
-        //    string code = RandomString(10);
-            
+        [HttpGet]
+        public IActionResult InviteCoach()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult InviteCoach(InviteCoachViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                string code = RandomString(10);
+                emailService.SendPasswordResetLink(model.CoachEmail, code);
+                return View("CoachInviteSuccess");
+            }
+            return View(model);
+        }
 
-        //}
 
 
 

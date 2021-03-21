@@ -131,7 +131,11 @@ namespace SportsAdministrationApp.Controllers
 
                 Team team = dbContext.Teams.Single(t => t.TeamCode.ToLower() == model.TeamCode.ToLower());
                 Team coach = dbContext.Teams.Single(t => t.CoachCode.ToLower() == model.CoachCode.ToLower());
+               
+                
+                var result = await userManager.CreateAsync(user, model.Password);
 
+                //dont leave it like this, its bad
                 if (team != null && model.CoachEnabled == false)
                 {
                     user.Team = team;
@@ -143,11 +147,13 @@ namespace SportsAdministrationApp.Controllers
                     }
                 }
                 else
-                    if (team != null && model.Coach == true && coach != null)
+                    if (team != null && model.CoachEnabled == true && coach != null)
                 {
                     user.Team = team;
                     user.Coach = true;
-                    var roleResult = await userManager.AddToRoleAsync(user, Roles.CoachRole);
+                    //THIS IS ADMIN ONLY TEMPORARILY
+                    //CHANGE THIS AND SEED ADMINISTRATOR ACCOUNT DETAILS
+                    var roleResult = await userManager.AddToRoleAsync(user, Roles.AdminRole);
                     var AthleteRoleResult = await userManager.AddToRoleAsync(user, Roles.AthleteRole);
                     if (!roleResult.Succeeded || !AthleteRoleResult.Succeeded)
                     {
@@ -157,7 +163,7 @@ namespace SportsAdministrationApp.Controllers
                 }
 
 
-                var result = await userManager.CreateAsync(user, model.Password);
+                //var result = await userManager.CreateAsync(user, model.Password);
                 var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                 var confirmationLink = Url.Action("ConfirmEmail", "Account",
                                         new { userId = user.Id, token = token }, Request.Scheme);

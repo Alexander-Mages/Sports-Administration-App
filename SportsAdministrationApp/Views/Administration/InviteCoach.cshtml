@@ -1,0 +1,18 @@
+﻿@model SportsAdministrationApp.ViewModels.InviteCoachViewModel
+<h2>Coach Invite</h2>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="CoachEmail"></label>
+                <input asp-for="CoachEmail" class="form-control" />
+                <span asp-validation-for="CoachEmail" class="text-danger"></span>
+            </div>
+            <div class="g-recaptcha" data-sitekey="@ViewData["ReCaptchaKey"]"></div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+@Html.AntiForgeryToken()
