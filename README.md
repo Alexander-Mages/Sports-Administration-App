@@ -12,6 +12,7 @@ dotnet user-secrets set "Email:Username" "UsernameHere"
 dotnet user-secrets set "Email:Host" "EmailHostHere"
 dotnet user-secrets set "Email:From" "EmailHere"
 ```
+You also must rename appsettinggit.json to appsettings.json, as well as adding your RECaptcha Keys. If you do not have one, visit here: https://www.google.com/recaptcha/admin/create
 # Prerequisites
 to run the application without docker, you must install .NET Core.
 
