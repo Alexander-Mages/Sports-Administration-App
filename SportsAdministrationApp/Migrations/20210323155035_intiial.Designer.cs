@@ -9,8 +9,8 @@ using SportsAdministrationApp.Models;
 namespace SportsAdministrationApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210308210006_totp")]
-    partial class totp
+    [Migration("20210323155035_intiial")]
+    partial class intiial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -255,9 +255,53 @@ namespace SportsAdministrationApp.Migrations
                     b.ToTable("PersonalRecord");
                 });
 
+            modelBuilder.Entity("SportsAdministrationApp.Models.Team", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CoachCode")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HeadCoach")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TeamCode")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Teams");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CoachCode = "anothacode",
+                            HeadCoach = "Mr. Foo",
+                            Name = "Swim",
+                            TeamCode = "Swim12345"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CoachCode = "code",
+                            HeadCoach = "Mr. Bar",
+                            Name = "Tennis",
+                            TeamCode = "Tennis12345"
+                        });
+                });
+
             modelBuilder.Entity("SportsAdministrationApp.Models.User", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<bool>("Coach")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Code")
                         .HasColumnType("TEXT");
@@ -267,56 +311,36 @@ namespace SportsAdministrationApp.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PersonalRecordId")
+                    b.Property<int?>("PersonalRecordId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("QrCodeUrl")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Team")
+                    b.Property<string>("TeamCode")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("TotpConfigured")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("TotpEnabled")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("TotpSetupCode")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("randomKey")
+                        .HasColumnType("TEXT");
+
                     b.HasIndex("PersonalRecordId");
 
-                    b.HasDiscriminator().HasValue("User");
+                    b.HasIndex("TeamId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "65e1dfa7-a9af-4c40-a5d6-f08123d14741",
-                            Email = "John@gmail.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "3aa9f274-27b4-4062-9c8c-94b009e8b2e4",
-                            TwoFactorEnabled = true,
-                            UserName = "John@gmail.com",
-                            Name = "John",
-                            PersonalRecordId = 0,
-                            Team = "Swim"
-                        },
-                        new
-                        {
-                            Id = "2",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "41fb3505-c937-4df3-a1d7-9eecf400d4d4",
-                            Email = "Bill@gmail.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "934405f6-7b3c-4543-b4e6-4880b76abe5b",
-                            TwoFactorEnabled = false,
-                            UserName = "Bill@gmail.com",
-                            Name = "Bill",
-                            PersonalRecordId = 0,
-                            Team = "Tennis"
-                        });
+                    b.HasDiscriminator().HasValue("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -385,16 +409,25 @@ namespace SportsAdministrationApp.Migrations
                 {
                     b.HasOne("SportsAdministrationApp.Models.PersonalRecord", "PersonalRecord")
                         .WithMany()
-                        .HasForeignKey("PersonalRecordId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PersonalRecordId");
+
+                    b.HasOne("SportsAdministrationApp.Models.Team", "Team")
+                        .WithMany("User")
+                        .HasForeignKey("TeamId");
 
                     b.Navigation("PersonalRecord");
+
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("SportsAdministrationApp.Models.PersonalRecord", b =>
                 {
                     b.Navigation("AthleteData");
+                });
+
+            modelBuilder.Entity("SportsAdministrationApp.Models.Team", b =>
+                {
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

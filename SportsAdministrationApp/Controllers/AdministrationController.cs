@@ -91,7 +91,17 @@ namespace SportsAdministrationApp.Controllers
         }
 
 
-
+        [AllowAnonymous]
+        public async Task<IActionResult> DebugCreateRole(string RoleName)
+        {
+            //DO NOT USE THIS CODE, DEMONSTRATION ONLY
+            IdentityRole role = new IdentityRole()
+            {
+                Name = RoleName
+            };
+            var result = await roleManager.CreateAsync(role);
+            return RedirectToAction("Index", "Home");
+        }
         public async Task<IActionResult> RoleManagerAsync()
         {
             var users = userManager.Users;

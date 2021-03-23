@@ -129,10 +129,15 @@ namespace SportsAdministrationApp.Controllers
                 //Database^ (far from finished)
                 var user = new User { UserName = model.Email, Email = model.Email, Name=model.Name, TwoFactorEnabled=model.TwoFactorEnabled, PersonalRecord=r, TotpEnabled=model.TotpEnabled};
 
-                Team team = dbContext.Teams.Single(t => t.TeamCode.ToLower() == model.TeamCode.ToLower());
-                Team coach = dbContext.Teams.Single(t => t.CoachCode.ToLower() == model.CoachCode.ToLower());
-               
-                
+                Team team = dbContext.Teams.SingleOrDefault(t => t.TeamCode.ToLower() == model.TeamCode.ToLower());
+                Team coach = null;
+                if (model.CoachCode != null)
+                {
+                    coach = dbContext.Teams.SingleOrDefault(t => t.CoachCode.ToLower() == model.CoachCode.ToLower());
+                }
+
+
+
                 var result = await userManager.CreateAsync(user, model.Password);
 
                 //dont leave it like this, its bad
@@ -161,7 +166,7 @@ namespace SportsAdministrationApp.Controllers
                         return RedirectToAction("Register", "Account");
                     }
                 }
-
+                var UpdateResult = await userManager.UpdateAsync(user);
 
                 //var result = await userManager.CreateAsync(user, model.Password);
                 var token = await userManager.GenerateEmailConfirmationTokenAsync(user);

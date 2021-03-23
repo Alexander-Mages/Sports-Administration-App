@@ -309,7 +309,7 @@ namespace SportsAdministrationApp.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PersonalRecordId")
+                    b.Property<int?>("PersonalRecordId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("QrCodeUrl")
@@ -319,7 +319,7 @@ namespace SportsAdministrationApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TeamId")
+                    b.Property<int?>("TeamId")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("TotpConfigured")
@@ -339,48 +339,6 @@ namespace SportsAdministrationApp.Migrations
                     b.HasIndex("TeamId");
 
                     b.HasDiscriminator().HasValue("User");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "4c5cfdea-afe0-4c73-b5d4-8d0e810c6cf5",
-                            Email = "John@gmail.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "becacb09-e1ab-42e5-9119-d1330172128f",
-                            TwoFactorEnabled = true,
-                            UserName = "John@gmail.com",
-                            Coach = false,
-                            Name = "John",
-                            PersonalRecordId = 0,
-                            TeamCode = "Swim",
-                            TeamId = 0,
-                            TotpConfigured = false,
-                            TotpEnabled = false
-                        },
-                        new
-                        {
-                            Id = "2",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "72d53754-0d51-4ca3-bbaf-0a82b2df6c3b",
-                            Email = "Bill@gmail.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "bf372e6f-55d3-4263-aa74-d5719c852a6c",
-                            TwoFactorEnabled = false,
-                            UserName = "Bill@gmail.com",
-                            Coach = false,
-                            Name = "Bill",
-                            PersonalRecordId = 0,
-                            TeamCode = "Tennis",
-                            TeamId = 0,
-                            TotpConfigured = false,
-                            TotpEnabled = false
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -449,15 +407,11 @@ namespace SportsAdministrationApp.Migrations
                 {
                     b.HasOne("SportsAdministrationApp.Models.PersonalRecord", "PersonalRecord")
                         .WithMany()
-                        .HasForeignKey("PersonalRecordId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PersonalRecordId");
 
                     b.HasOne("SportsAdministrationApp.Models.Team", "Team")
                         .WithMany("User")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TeamId");
 
                     b.Navigation("PersonalRecord");
 

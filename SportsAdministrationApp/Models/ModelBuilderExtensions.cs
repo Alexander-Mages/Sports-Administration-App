@@ -11,27 +11,27 @@ namespace SportsAdministrationApp.Models
         public static void Seed(this ModelBuilder modelBuilder)
         {
             //Seed users here
-            modelBuilder.Entity<User>().HasData(
-                new User
-                {
-                    Id = "1",
-                    //AthleteDataId = 2,
-                    TwoFactorEnabled = true,
-                    Name = "John",
-                    TeamCode = "Swim",
-                    Email = "John@gmail.com",
-                    UserName = "John@gmail.com"
-                },
-                new User
-                {
-                    Id = "2",
-                    //AthleteDataId = 1,
-                    Name = "Bill",
-                    TeamCode = "Tennis",
-                    Email = "Bill@gmail.com",
-                    UserName = "Bill@gmail.com"
-                }
-            );
+            //modelBuilder.Entity<User>().HasData(
+            //    new User
+            //    {
+            //        //Id = "1",
+            //        //AthleteDataId = 2,
+            //        TwoFactorEnabled = true,
+            //        Name = "John",
+            //        TeamCode = "Swim",
+            //        Email = "John@gmail.com",
+            //        UserName = "John@gmail.com"
+            //    },
+            //    new User
+            //    {
+            //       // Id = "2",
+            //        //AthleteDataId = 1,
+            //        Name = "Bill",
+            //        TeamCode = "Tennis",
+            //        Email = "Bill@gmail.com",
+            //        UserName = "Bill@gmail.com"
+            //    }
+            //);
             //seed teams here
             modelBuilder.Entity<Team>().HasData(
                 new Team
