@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace SportsAdministrationApp.ViewModels
 {
-    public class CreateRoleViewModel
+    public class EditRoleViewModel
     {
-        [Required]
+        public int Id { get; set; }
+        [Required(ErrorMessage = "You must enter role name")]
         public string RoleName { get; set; }
-
+        public List<string> Users { get; set; }
     }
 }

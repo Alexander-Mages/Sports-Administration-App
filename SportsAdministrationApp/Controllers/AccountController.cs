@@ -152,7 +152,7 @@ namespace SportsAdministrationApp.Controllers
                     }
                 }
                 else
-                    if (team != null && model.CoachEnabled == true && coach != null)
+                    if (team != null && model.CoachEnabled == true && coach != null && user.TwoFactorEnabled)
                 {
                     user.Team = team;
                     user.Coach = true;
@@ -345,17 +345,18 @@ namespace SportsAdministrationApp.Controllers
                 user.QrCodeUrl = qrCodeImageUrl;
                 user.TotpSetupCode = manualEntrySetupCode;
                 user.randomKey = randomKey;
+                user.TotpConfigured = true;
+            }
                 //to pass data into View
                 TotpData dta = new TotpData
                 {
-                    TotpSetupCode = manualEntrySetupCode,
-                    QrCodeUrl = qrCodeImageUrl
+                    TotpSetupCode = user.TotpSetupCode,
+                    QrCodeUrl = user.QrCodeUrl
                 };
-                user.TotpConfigured = true;
+            model.TotpSetupCode = user.TotpSetupCode;
+            model.QrCodeUrl = user.QrCodeUrl;
                 await userManager.UpdateAsync(user);
                 return View(dta);
-            }
-            return View();
         }
         //END TOTP CONFIGURATION/SETUP
 
@@ -363,13 +364,11 @@ namespace SportsAdministrationApp.Controllers
         
         //TOTP CODE VALIDATION
         [HttpGet]
-        [Authorize(Roles = Roles.AthleteRole)]
-        public IActionResult TotpConfirm(string QrCodeUrl, string TotpSetupCode)
+        public IActionResult TotpConfirm()
         {
             return View();
         }
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Roles.AthleteRole)]
         [HttpPost]
         public async Task<IActionResult> TotpConfirm(TotpConfirmViewModel model)
         {

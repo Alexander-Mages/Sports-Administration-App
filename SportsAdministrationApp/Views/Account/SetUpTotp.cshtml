@@ -7,5 +7,5 @@
 <h6>To set up 2FA, download Google Authenticator, Microsoft Authenticator, or another TOTP app from the app store, or google play.<br />Press the + button, and enter this setup
     key: @Model.TotpSetupCode, or scan the QR code below.</h6>
 <img src="@Model.QrCodeUrl">
-<h6>Once you have configured 2FA, click <a asp-action="TotpConfirm" asp-controller="account">here</a> to enter your Google Authenticator code. Note: Before logging in for the first time
+<h6>Once you have configured 2FA, click <a asp-action="Login" asp-controller="account">here</a> to log in using your Google Authenticator code. Note: Before logging in for the first time
     ensure you have confirmed your email by clicking the link sent to your inbox.</h6>

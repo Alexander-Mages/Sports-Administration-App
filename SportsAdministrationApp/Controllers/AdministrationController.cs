@@ -15,7 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SportsAdministrationApp.Controllers
-{   
+{
     [Authorize(Roles = Roles.AdminRole)]
     public class AdministrationController : Controller
     {
@@ -64,6 +64,7 @@ namespace SportsAdministrationApp.Controllers
 
 
         [AllowAnonymous]
+        [HttpGet]
         public IActionResult CreateRole()
         {
             return View();
@@ -72,20 +73,21 @@ namespace SportsAdministrationApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
         {
-            //DO NOT USE THIS CODE, DEMONSTRATION ONLY
-            IdentityRole role = new IdentityRole()
+            if (ModelState.IsValid)
             {
-                Name = model.RoleName
-            };
-            var result = await roleManager.CreateAsync(role);
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Index", "Administration");
-
-            }
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error.Description);
+                IdentityRole role = new IdentityRole
+                {
+                    Name = model.RoleName
+                };
+                var result = await roleManager.CreateAsync(role);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("ListRoles", "Administration");
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
             }
             return View(model);
         }
@@ -102,29 +104,43 @@ namespace SportsAdministrationApp.Controllers
             var result = await roleManager.CreateAsync(role);
             return RedirectToAction("Index", "Home");
         }
-        public async Task<IActionResult> RoleManagerAsync()
-        {
-            var users = userManager.Users;
-            var roles = roleManager.Roles.ToList();
-            RoleManagerViewModel model = new RoleManagerViewModel();
-            foreach (var role in roles)
-            {
-                RoleDetailsViewModel viewmodel = new RoleDetailsViewModel();
-                viewmodel.Id = role.Id;
-                viewmodel.Name = role.Name;
-                foreach (User user in users)
-                {
-                    if (await userManager.IsInRoleAsync(user, role.Name))
-                    {
-                        viewmodel.Users.Add(user);
-                    }
-                }
-                model.Roles.Add(viewmodel);
-            }
-            return View(model);
+        //public Task<IActionResult> RoleManagerAsync()
+        //{
+        //    List<User> users =  userManager.Users.ToList<User>();
 
-        }
+        //    RoleDetailsViewModel model = new RoleDetailsViewModel
+        //    {
+        //        Users = users
+        //    };
+        //return View(model);
+        //}
+            //var users = userManager.Users;
+            //var roles = roleManager.Roles.ToList();
+            //RoleManagerViewModel model = new RoleManagerViewModel();
+            //foreach (var role in roles)
+            //{
+            //    RoleDetailsViewModel viewmodel = new RoleDetailsViewModel();
+            //    viewmodel.Id = role.Id;
+            //    viewmodel.Name = role.Name;
+            //    foreach (User user in users)
+            //    {
+            //        if (await userManager.IsInRoleAsync(user, role.Name))
+            //        {
+            //            viewmodel.Users.Add(user);
+            //        }
+            //    }
+            //    model.Roles.Add(viewmodel);
+            //}
+            //return View(model);
 
+        
+
+
+        //public IActionResult ResetTwoFactorAuth(string id)
+        //{
+
+        //}
+            
         //[AllowAnonymous]
         //public async Task<IActionResult> AddAdminToFirstUser()
         //{
@@ -151,6 +167,42 @@ namespace SportsAdministrationApp.Controllers
 
 
 
+        [HttpGet]
+        public IActionResult ListRoles()
+        {
+            var roles = roleManager.Roles;
+            return View(roles);
+        }
+
+
+
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteRole(string id)
+        {
+            var role = await roleManager.FindByIdAsync(id);
+            if (role == null)
+            {
+                ViewBag.ErrorMessage = $"Role with Id {id} cannot be found";
+                return View("NotFound");
+            }
+            else
+            {
+                var result = await roleManager.DeleteAsync(role);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("ListRoles");
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return View("ListRoles");
+            }
+        }
 
 
 
@@ -170,27 +222,38 @@ namespace SportsAdministrationApp.Controllers
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //INDEX/LIST OF ALL USERS
         public IActionResult Index()
         {
             var model = userManager.Users.ToList();
             return View(model);
         }
+
+
+
+
+
+        ////INDEX/LIST OF ALL USERS
+        //public async Task<IActionResult> Index()
+        //{
+        //    var users = userManager.Users.ToList();
+        //    var roles = roleManager.Roles.ToList();
+        //    UserListViewModel model = new UserListViewModel();
+        //    foreach (IdentityRole role in roles)
+        //    {
+        //        RoleViewViewModel viewmodel = new RoleViewViewModel();
+        //        viewmodel.Id = role.Id;
+        //        viewmodel.Name = role.Name;
+        //        foreach (User user in users)
+        //        {
+        //            if (await userManager.IsInRoleAsync(user, role.Name))
+        //            {
+        //                viewmodel.Users.Add(user);
+        //            }
+        //        }
+        //        model.Roles.Add(viewmodel);
+        //    }
+        //    return View(model);
+        //}
         //END INDEX
 
 

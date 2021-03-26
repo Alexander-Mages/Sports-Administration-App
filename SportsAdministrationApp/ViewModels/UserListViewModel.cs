@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace SportsAdministrationApp.ViewModels
 {
-    public class RoleManagerViewModel
+    public class UserListViewModel
     {
-        public List<RoleDetailsViewModel> Roles { get; set; }
+        public List<UserListViewModel> Roles { get; set; }
+
     }
 }

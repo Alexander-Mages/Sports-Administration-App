@@ -3,7 +3,7 @@
     ViewBag.Title = "Confirm 2FA Code";
 }
 <h1>Confirm 2FA code</h1>
-<h6>If you have not yet enabled Google Authenticator, click <a asp-for="SetUpTotp" asp-controller="account">here</a> for instructions on enabling it.</h6>
+<h6>If you have not yet enabled Google Authenticator, click <a asp-action="SetUpTotp" asp-controller="account">here</a> for instructions on enabling it.</h6>
 <div class="row">
     <div class="col-md-12">
         <form method="post">
@@ -13,7 +13,7 @@
                 <input asp-for="Code" class="form-control" />
                 <span asp-validation-for="Code" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
 
         </form>
     </div>
