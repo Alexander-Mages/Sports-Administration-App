@@ -104,48 +104,6 @@ namespace SportsAdministrationApp.Controllers
             var result = await roleManager.CreateAsync(role);
             return RedirectToAction("Index", "Home");
         }
-        //public Task<IActionResult> RoleManagerAsync()
-        //{
-        //    List<User> users =  userManager.Users.ToList<User>();
-
-        //    RoleDetailsViewModel model = new RoleDetailsViewModel
-        //    {
-        //        Users = users
-        //    };
-        //return View(model);
-        //}
-            //var users = userManager.Users;
-            //var roles = roleManager.Roles.ToList();
-            //RoleManagerViewModel model = new RoleManagerViewModel();
-            //foreach (var role in roles)
-            //{
-            //    RoleDetailsViewModel viewmodel = new RoleDetailsViewModel();
-            //    viewmodel.Id = role.Id;
-            //    viewmodel.Name = role.Name;
-            //    foreach (User user in users)
-            //    {
-            //        if (await userManager.IsInRoleAsync(user, role.Name))
-            //        {
-            //            viewmodel.Users.Add(user);
-            //        }
-            //    }
-            //    model.Roles.Add(viewmodel);
-            //}
-            //return View(model);
-
-        
-
-
-        //public IActionResult ResetTwoFactorAuth(string id)
-        //{
-
-        //}
-            
-        //[AllowAnonymous]
-        //public async Task<IActionResult> AddAdminToFirstUser()
-        //{
-        //    return View();
-        //}
 
         [HttpGet]
         public IActionResult InviteCoach()
@@ -412,31 +370,6 @@ namespace SportsAdministrationApp.Controllers
 
 
 
-        ////INDEX/LIST OF ALL USERS
-        //public async Task<IActionResult> Index()
-        //{
-        //    var users = userManager.Users.ToList();
-        //    var roles = roleManager.Roles.ToList();
-        //    UserListViewModel model = new UserListViewModel();
-        //    foreach (IdentityRole role in roles)
-        //    {
-        //        RoleViewViewModel viewmodel = new RoleViewViewModel();
-        //        viewmodel.Id = role.Id;
-        //        viewmodel.Name = role.Name;
-        //        foreach (User user in users)
-        //        {
-        //            if (await userManager.IsInRoleAsync(user, role.Name))
-        //            {
-        //                viewmodel.Users.Add(user);
-        //            }
-        //        }
-        //        model.Roles.Add(viewmodel);
-        //    }
-        //    return View(model);
-        //}
-        //END INDEX
-
-
         //DETAILS OF SPECIFIC USER BY ID
         public async Task<IActionResult> UserDetails(string id)
         {
@@ -515,7 +448,7 @@ namespace SportsAdministrationApp.Controllers
 
 
 
-        //ERROR FUNCTIONALITY
+        //ERROR
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
