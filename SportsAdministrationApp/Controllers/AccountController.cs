@@ -103,6 +103,7 @@ namespace SportsAdministrationApp.Controllers
 
         //REGISTER
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register()
         {
             ViewData["ReCaptchaKey"] = configuration.GetSection("GoogleReCaptcha:key").Value;
@@ -485,5 +486,11 @@ namespace SportsAdministrationApp.Controllers
             return View();
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

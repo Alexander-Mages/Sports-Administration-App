@@ -43,13 +43,6 @@ namespace SportsAdministrationApp
                 .AddDefaultTokenProviders();
             services.AddControllersWithViews();
             services.AddSession();
-            services.AddMvc(options =>
-            {
-                var policy = new AuthorizationPolicyBuilder()
-                                 .RequireAuthenticatedUser()
-                                 .Build();
-                options.Filters.Add(new AuthorizeFilter(policy));
-            });
             services.AddSingleton<IConfiguration>(_config);
             services.AddTransient<IEmailService, EmailService>();
             //for userrepository implementation dependency injection
