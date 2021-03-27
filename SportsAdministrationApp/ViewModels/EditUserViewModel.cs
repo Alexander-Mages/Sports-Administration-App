@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SportsAdministrationApp.ViewModels
 {
-    public class EditViewModel
+    public class EditUserViewModel
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Name cannot exceed 50 characters")]

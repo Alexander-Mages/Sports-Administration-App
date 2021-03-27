@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<SportsAdministrationApp.Models.User>
-<-- -->User Details Page, displays details of all users</-->
+<-- -->User 
+    Page, displays details of all users</-->
 <html>
 <head>
     <title>Employee List</title>
@@ -13,8 +14,8 @@
                     <h3>@user.Name</h3>
                 </div>
                 <div class="card-body" text-center>
-                    <a asp-controller="administration" asp-action="details" asp-route-id="@user.Id" class="btn btn-primary">View</a>
-                    <a asp-controller="administration" asp-action="edit" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
+                    <a asp-controller="administration" asp-action="UserDetails" asp-route-id="@user.Id" class="btn btn-primary">View</a>
+                    <a asp-controller="administration" asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
 
                     <form method="post" asp-action="Delete" asp-route-id="@user.Id">
 

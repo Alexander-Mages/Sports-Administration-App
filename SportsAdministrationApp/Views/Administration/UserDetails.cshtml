@@ -1,4 +1,4 @@
-﻿@model SportsAdministrationApp.ViewModels.DetailsViewModel
+﻿@model SportsAdministrationApp.ViewModels.UserDetailsViewModel
 <html>
 <head>
 
@@ -17,7 +17,7 @@
     </div>
     <div class="card-footer text-center">
         <a asp-controller="administration" asp-action="index" class="btn btn-primary">Back</a>
-        <a asp-action="edit" asp-controller="administration"
+        <a asp-action="EditUser" asp-controller="administration"
            asp-route-id="@Model.User.Id" class="btn btn-primary">Edit</a>
 
 

@@ -226,6 +226,83 @@ namespace SportsAdministrationApp.Controllers
 
 
 
+        [HttpGet]
+        public async Task<IActionResult> EditUsersInRole(string roleId)
+        {
+            ViewBag.roleId = roleId;
+            var role = await roleManager.FindByIdAsync(roleId);
+            ViewBag.roleName = role.Name;
+            if (role == null)
+            {
+                ViewBag.ErrorMessage = $"Role with Id = {roleId} does not exist";
+                return View("NotFound");
+            }
+            var model = new List<UserRoleViewModel>();
+
+            foreach (var user in userManager.Users)
+            {
+                var UserRoleViewModel = new UserRoleViewModel
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName
+                };
+                if (await userManager.IsInRoleAsync(user, role.Name))
+                {
+                    UserRoleViewModel.IsSelected = true;
+                }
+                else
+                {
+                    UserRoleViewModel.IsSelected = false;
+                }
+                model.Add(UserRoleViewModel);
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> model, string roleId)
+        {
+            var role = await roleManager.FindByIdAsync(roleId);
+            if (role == null)
+            {
+                ViewBag.ErrorMessage = $"Role with Id: {roleId} does not exist";
+                return View("NotFound");
+            }
+            for (int i = 0; i < model.Count; i++)
+            {
+                var user = await userManager.FindByIdAsync(model[i].UserId);
+                IdentityResult result = null;
+                if (model[i].IsSelected && !(await userManager.IsInRoleAsync(user, role.Name)))
+                {
+                   result = await userManager.AddToRoleAsync(user, role.Name);
+                }
+                else if (!model[i].IsSelected && await userManager.IsInRoleAsync(user, role.Name))
+                {
+                    result = await userManager.RemoveFromRoleAsync(user, role.Name);
+                }
+                else
+                {
+                    continue;
+                }
+                if (result.Succeeded)
+                {
+                    if (i < (model.Count - 1))
+                        continue;
+                    else
+                        return RedirectToAction("EditRole", new { Id = roleId });
+                }
+                
+            }
+
+            return RedirectToAction("EditRole", new { Id = roleId });
+        }
+
+
+
+
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteRole(string id)
@@ -258,7 +335,39 @@ namespace SportsAdministrationApp.Controllers
 
 
 
+        [HttpGet]
+        public async Task<IActionResult> ManageUserRoles(string userId)
+        {
+            ViewBag.userId = userId;
+            var user = await userManager.FindByIdAsync(userId);
 
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with Id: {userId} does not exist";
+                return View("NotFound");
+            }
+            var model = new List<UserRolesViewModel>();
+
+            foreach (var role in roleManager.Roles)
+            {
+                var UserRolesViewModel = new UserRolesViewModel
+                {
+                    RoleId = role.Id,
+                    RoleName = role.Name
+                };
+
+                if (await userManager.IsInRoleAsync(user, role.Name))
+                {
+                    UserRolesViewModel.IsSelected = true;
+                }
+                else
+                {
+                    UserRolesViewModel.IsSelected = false;
+                }
+                model.Add(UserRolesViewModel);
+            }
+            return View(model);
+        }
 
 
 
@@ -305,9 +414,9 @@ namespace SportsAdministrationApp.Controllers
 
 
         //DETAILS OF SPECIFIC USER BY ID
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> UserDetails(string id)
         {
-            DetailsViewModel DetailsViewModel = new DetailsViewModel()
+            UserDetailsViewModel DetailsViewModel = new UserDetailsViewModel()
             {
                 User = await userManager.FindByIdAsync(id),
                 PageTitle = "User Details"
@@ -324,10 +433,10 @@ namespace SportsAdministrationApp.Controllers
 
         //EDIT SPECIFIC USER DETAILS
         [HttpGet]
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> EditUser(string id)
         {
             var user = await userManager.FindByIdAsync(id);
-            EditViewModel editViewModel = new EditViewModel
+            EditUserViewModel editViewModel = new EditUserViewModel
             {
                 Id = user.Id,
                 Name = user.Name,
@@ -338,7 +447,7 @@ namespace SportsAdministrationApp.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(EditViewModel model)
+        public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
             if (ModelState.IsValid)
             {
