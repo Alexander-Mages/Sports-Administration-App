@@ -41,6 +41,7 @@ namespace SportsAdministrationApp
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
             }).AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+            services.Configure<DataProtectionTokenProviderOptions>(o => o.TokenLifespan = TimeSpan.FromHours(3));
             services.AddControllersWithViews();
             services.AddSession();
             services.AddSingleton<IConfiguration>(_config);

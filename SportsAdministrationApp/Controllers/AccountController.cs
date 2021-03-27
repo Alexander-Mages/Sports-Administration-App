@@ -174,6 +174,7 @@ namespace SportsAdministrationApp.Controllers
                 var confirmationLink = Url.Action("ConfirmEmail", "Account",
                                         new { userId = user.Id, token = token }, Request.Scheme);
                 emailService.SendAuthEmail(user.Email, confirmationLink);
+                HttpContext.Session.SetString("Id", user.Id);
                 if (result.Succeeded)
                 {
                     if (user.TwoFactorEnabled == true && user.TotpEnabled == true)
@@ -196,7 +197,16 @@ namespace SportsAdministrationApp.Controllers
         }
         //END REGISTER
 
-
+        //RESEND EMAIL CONFIRMATION LINK
+        public async Task<IActionResult> ResendConfirmation()
+        {
+            var user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
+            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink = Url.Action("ConfirmEmail", "Account",
+                                    new { userId = user.Id, token = token }, Request.Scheme);
+            emailService.SendAuthEmail(user.Email, confirmationLink);
+            return View("ConfirmEmail");
+        }
 
         //LOGIN
         [HttpGet]
