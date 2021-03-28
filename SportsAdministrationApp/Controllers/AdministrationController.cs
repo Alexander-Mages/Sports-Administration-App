@@ -44,6 +44,7 @@ namespace SportsAdministrationApp.Controllers
             this.emailService = emailService;
 
         }
+        //PRIVATE METHODS
         static string RandomString(int len)
         {
             const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -60,9 +61,10 @@ namespace SportsAdministrationApp.Controllers
             }
             return result.ToString();
         }
+        //END PRIVATE METHODS
 
 
-
+        //CREATE ROLES
         [AllowAnonymous]
         [HttpGet]
         public IActionResult CreateRole()
@@ -91,20 +93,10 @@ namespace SportsAdministrationApp.Controllers
             }
             return View(model);
         }
+        //END CREATE ROLES
 
-
-        [AllowAnonymous]
-        public async Task<IActionResult> DebugCreateRole(string RoleName)
-        {
-            //DO NOT USE THIS CODE, DEMONSTRATION ONLY
-            IdentityRole role = new IdentityRole()
-            {
-                Name = RoleName
-            };
-            var result = await roleManager.CreateAsync(role);
-            return RedirectToAction("Index", "Home");
-        }
-
+        
+        //INVITE NEW COACH
         [HttpGet]
         public IActionResult InviteCoach()
         {
@@ -122,16 +114,20 @@ namespace SportsAdministrationApp.Controllers
             }
             return View(model);
         }
+        //END INVITE NEW COACH
 
 
-
+        //LIST ALL ROLES
         [HttpGet]
         public IActionResult ListRoles()
         {
             var roles = roleManager.Roles;
             return View(roles);
         }
+        //END LIST ROLES
 
+
+        //EDIT ROLES
         [HttpGet]
         public async Task<IActionResult> EditRole(string id)
         {
@@ -146,7 +142,6 @@ namespace SportsAdministrationApp.Controllers
                 Id = role.Id,
                 RoleName = role.Name
             };
-
             foreach (var user in userManager.Users)
             {
                 if (await userManager.IsInRoleAsync(user, role.Name))
@@ -180,10 +175,11 @@ namespace SportsAdministrationApp.Controllers
                 return View(model);
             }
         }
+        //END EDIT ROLES
 
 
 
-
+        //EDIT USERS THAT BELONG TO A SPECIFIED ROLE
         [HttpGet]
         public async Task<IActionResult> EditUsersInRole(string roleId)
         {
@@ -216,7 +212,6 @@ namespace SportsAdministrationApp.Controllers
             }
             return View(model);
         }
-
         [HttpPost]
         public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> model, string roleId)
         {
@@ -249,18 +244,14 @@ namespace SportsAdministrationApp.Controllers
                     else
                         return RedirectToAction("EditRole", new { Id = roleId });
                 }
-                
             }
-
             return RedirectToAction("EditRole", new { Id = roleId });
         }
+        //END EDIT USERS IN ROLE
 
 
 
-
-
-
-
+        //DELETE A ROLE
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteRole(string id)
@@ -285,27 +276,22 @@ namespace SportsAdministrationApp.Controllers
                 return View("ListRoles");
             }
         }
+        //END DELETE ROLES
 
 
 
-
-
-
-
-
+        //MANAGE ROLES THAT A SPECIFIC USER IS ASSIGNED TO
         [HttpGet]
         public async Task<IActionResult> ManageUserRoles(string userId)
         {
             ViewBag.userId = userId;
             var user = await userManager.FindByIdAsync(userId);
-
             if (user == null)
             {
                 ViewBag.ErrorMessage = $"User with Id: {userId} does not exist";
                 return View("NotFound");
             }
             var model = new List<UserRolesViewModel>();
-
             foreach (var role in roleManager.Roles)
             {
                 var UserRolesViewModel = new UserRolesViewModel
@@ -313,7 +299,6 @@ namespace SportsAdministrationApp.Controllers
                     RoleId = role.Id,
                     RoleName = role.Name
                 };
-
                 if (await userManager.IsInRoleAsync(user, role.Name))
                 {
                     UserRolesViewModel.IsSelected = true;
@@ -326,8 +311,6 @@ namespace SportsAdministrationApp.Controllers
             }
             return View(model);
         }
-
-
         [HttpPost]
         public async Task<IActionResult> ManageUserRoles(List<UserRolesViewModel> model, string userId)
         {
@@ -353,20 +336,17 @@ namespace SportsAdministrationApp.Controllers
             }
             return RedirectToAction("EditUser", new { Id = userId });
         }
+        //END MANAGE ROLES BY USER
 
 
 
-
-
-
-
+        //LIST ALL USERS ~ INDEX PAGE
         public IActionResult Index()
         {
             var model = userManager.Users.ToList();
             return View(model);
         }
-
-
+        //END INDEX
 
 
 
@@ -418,6 +398,8 @@ namespace SportsAdministrationApp.Controllers
             return View();
         }
         //END EDIT
+
+
 
         //Delete User
         [HttpPost]
