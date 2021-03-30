@@ -66,7 +66,7 @@ namespace SportsAdministrationApp.Services
         public void SendCoachInvite(string email, string code)
             //add team code here as well
         {
-            SendEmailAsync(email, "Sports Administration App: Coach Invite Code", $"Enter this code during registration to log into ")
+            SendEmailAsync(email, "Sports Administration App: Coach Invite Code", $"Enter this code during registration to register as a coach: {code}");
         }
     }
 }
