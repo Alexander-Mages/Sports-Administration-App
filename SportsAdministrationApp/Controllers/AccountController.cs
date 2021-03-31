@@ -210,6 +210,7 @@ namespace SportsAdministrationApp.Controllers
 
         //LOGIN
         [HttpGet]
+        //add errors
         public IActionResult Login()
         {
             ViewData["ReCaptchaKey"] = configuration.GetSection("GoogleReCaptcha:key").Value;
@@ -311,13 +312,13 @@ namespace SportsAdministrationApp.Controllers
 
         //TWO FACTOR AUTHENTICATION
         [HttpGet]
-        [Authorize(Roles = Roles.AthleteRole)]
+        //[Authorize(Roles = Roles.AthleteRole)]
         public IActionResult TwoFactorConfirm()
         {
             return View();
         }
         [HttpPost]
-        [Authorize(Roles = Roles.AthleteRole)]
+        //[Authorize(Roles = Roles.AthleteRole)]
         public async Task<IActionResult> TwoFactorConfirm(TwoFactorConfirmViewModel model)
         {
             User user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
