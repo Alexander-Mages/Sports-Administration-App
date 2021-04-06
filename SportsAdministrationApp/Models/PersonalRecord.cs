@@ -10,5 +10,10 @@ namespace SportsAdministrationApp.Models
         public int Id { get; set; }
         public decimal PR { get; set; }
         public List<AthleteData> AthleteData { get; set; }
+
+        public PersonalRecord()
+        {
+            AthleteData = new List<AthleteData>();
+        }
     }
 }

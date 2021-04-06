@@ -109,7 +109,7 @@ namespace SportsAdministrationApp.Controllers
             if (ModelState.IsValid)
             {
                 string code = RandomString(10);
-                emailService.SendPasswordResetLink(model.CoachEmail, code);
+                emailService.SendCoachInvite(model.CoachEmail, code, "teamcode");
                 return View("CoachInviteSuccess");
             }
             return View(model);

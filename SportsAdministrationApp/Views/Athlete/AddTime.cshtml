@@ -2,14 +2,16 @@
 @{
     ViewBag.Title = "setslekjres";
 }
-<h1>Create Role</h1>
+<h1>Add Time</h1>
 <hr />
 <div class="row">
     <div class="col-md-12">
         <form method="post">
             <div class="form-group">
                 <label>Time</label>
-                <input name="Time" id="Time" class="form-control" /><input type="hidden" name="id" id="id" value="@Model.Id"
+                <input name="Time" id="Time" class="form-control" /><input type="hidden" name="id" id="id" value="@Model.Id" />
+                <label>Location</label>
+                <input name="Location" id="Location" class="form-control" />
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

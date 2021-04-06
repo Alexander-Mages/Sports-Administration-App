@@ -54,11 +54,21 @@ namespace SportsAdministrationApp.Controllers
             return View(user);
         }
         [HttpPost]
-        public async Task<IActionResult> AddTime(string id, string time)
+        public async Task<IActionResult> AddTime(string id, string time, string location)
         {
             var user = await userManager.FindByIdAsync(id);
-            user.PersonalRecord.AthleteData.Add(new AthleteData() { Time = Convert.ToDecimal(time)});
-            //add result check
+            //PersonalRecord r = new PersonalRecord() { PR = 30 };
+            //AthleteData d = new AthleteData() { Location = "Random Natatorium", Time = 29 };
+            //r.AthleteData = new List<AthleteData>();
+            //r.AthleteData.Add(d);
+            PersonalRecord r = new PersonalRecord();
+            r.AthleteData = new List<AthleteData>();
+            AthleteData d = new AthleteData() { Location = location, Time = Convert.ToDecimal(time) };
+            //user.PersonalRecord.AthleteData.Add(new AthleteData() { Time = Convert.ToDecimal(time), Location = location });
+            r.AthleteData.Add(d);
+            user.PersonalRecord.AthleteData.Add(d);
+
+            //if (time > )
             var result = await userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {

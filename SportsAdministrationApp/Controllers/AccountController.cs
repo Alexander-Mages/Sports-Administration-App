@@ -343,7 +343,7 @@ namespace SportsAdministrationApp.Controllers
         //TOTP CONFIGURATION/SETUP
         public async Task<IActionResult> SetUpTotp(TotpData model)
         {
-            User user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
+            User user = await userManager.GetUserAsync(HttpContext.User);
             if (user.TotpConfigured == false)
             {
                 HttpContext.Session.SetString("Id", user.Id);

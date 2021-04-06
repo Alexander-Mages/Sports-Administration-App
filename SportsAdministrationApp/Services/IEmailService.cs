@@ -11,6 +11,7 @@ namespace SportsAdministrationApp.Services
         public void SendAuthEmail(string email, string link);
         public void SendTwoFactorCode(string email, string code);
         public void SendPasswordResetLink(string email, string code);
-        public void SendCoachInvite(string email, string code);
+        public void SendCoachInvite(string email, string code, string teamCode);
+        public void SendAthleteInvite(string email, string code);
     }
 }

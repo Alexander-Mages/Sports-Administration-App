@@ -13,5 +13,6 @@ namespace SportsAdministrationApp.Models
         public decimal Time { get; set; }
         public PersonalRecord PersonalRecord { get; set; }
         public int PersonalRecordId { get; set; }
+
     }
 }

@@ -63,8 +63,13 @@ namespace SportsAdministrationApp.Services
         {
             SendEmailAsync(email, "Sports Administration App: Password Reset", $"click here to reset your password: {link}\nIf you have not requested a password change, you can safely discard this email");
         }
-        public void SendCoachInvite(string email, string code)
+        public void SendCoachInvite(string email, string code, string teamCode)
             //add team code here as well
+        {
+            SendEmailAsync(email, "Sports Administration App: Coach Invite Code", $"Enter this code into the 'coach code' field during registration: {code} and enter this " +
+                $"code into the team code field: {teamCode}");
+        }
+        public void SendAthleteInvite(string email, string code)
         {
             SendEmailAsync(email, "Sports Administration App: Coach Invite Code", $"Enter this code during registration to register as a coach: {code}");
         }
