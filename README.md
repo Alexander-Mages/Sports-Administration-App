@@ -40,32 +40,32 @@ To access the running application, visit localhost:5001 in your browser.
 
 # Application Usage
 ### Account Manipulation
-To register a new user, visit:
+###### To register a new user, visit:
 ```
 localhost:port/Account/Register
 ```
-To Log in, visit:
+###### To Log in, visit:
 ```
 localhost:port/Account/login
 ```
-To access account settings, visit:
+###### To access account settings, visit:
 ```
 localhost:port/Account/AccountSettings
 ```
-To reset your password, visit:
+###### To reset your password, visit:
 ```
 localhost:port/Account/ForgotPassword
 ```
 ### Administration Functionality
-To invite a coach, visit:
+###### To invite a coach, visit:
 ```
 localhost:port/Administration/InviteCoach
 ```
-To view and edit users, visit:
+###### To view and edit users, visit:
 ```
 localhost:port/Administration/Index
 ```
-To manage roles, visit:
+###### To manage roles, visit:
 ```
 localhost:port/Administration/ListRoles
 ```
