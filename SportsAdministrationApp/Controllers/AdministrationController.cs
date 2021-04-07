@@ -393,7 +393,7 @@ namespace SportsAdministrationApp.Controllers
                 user.Email = model.Email;
                 //user.Team = model.Team;
                 await userManager.UpdateAsync(user);
-                return RedirectToAction("index");
+                return RedirectToAction("Index");
             }
             return View();
         }

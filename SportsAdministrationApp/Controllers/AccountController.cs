@@ -159,7 +159,7 @@ namespace SportsAdministrationApp.Controllers
                     user.Coach = true;
                     //THIS IS ADMIN ONLY TEMPORARILY
                     //CHANGE THIS AND SEED ADMINISTRATOR ACCOUNT DETAILS
-                    var roleResult = await userManager.AddToRoleAsync(user, Roles.AdminRole);
+                    var roleResult = await userManager.AddToRoleAsync(user, Roles.CoachRole);
                     var AthleteRoleResult = await userManager.AddToRoleAsync(user, Roles.AthleteRole);
                     if (!roleResult.Succeeded || !AthleteRoleResult.Succeeded)
                     {
