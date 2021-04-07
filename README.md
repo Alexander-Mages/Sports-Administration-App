@@ -70,7 +70,7 @@ localhost:port/Administration/Index
 localhost:port/Administration/ListRoles
 ```
 
-###Testing Credentials
+### Testing Credentials
 Privilege  | Username     | Email                 | Password | Team
 ---------- | -----------  | --------------------  | -------- | ------
 Admin      | Admin        | Admin@Admin.com       | Test123! | N/A
