@@ -122,12 +122,10 @@ namespace SportsAdministrationApp.Controllers
                     ModelState.AddModelError(string.Empty, "Sorry sir, no bots allowed");
                     return View(model);
                 }
-                //Databaseˇ
                 PersonalRecord r = new PersonalRecord() { PR = 30 };
                 AthleteData d = new AthleteData() { Location = "Random Natatorium", Time = 29 };
                 r.AthleteData = new List<AthleteData>();
                 r.AthleteData.Add(d);
-                //Database^ (far from finished)
                 var user = new User { UserName = model.Email, Email = model.Email, Name=model.Name, TwoFactorEnabled=model.TwoFactorEnabled, PersonalRecord=r, TotpEnabled=model.TotpEnabled};
 
                 Team team = dbContext.Teams.SingleOrDefault(t => t.TeamCode.ToLower() == model.TeamCode.ToLower());
@@ -136,12 +134,7 @@ namespace SportsAdministrationApp.Controllers
                 {
                     coach = dbContext.Teams.SingleOrDefault(t => t.CoachCode.ToLower() == model.CoachCode.ToLower());
                 }
-
-
-
                 var result = await userManager.CreateAsync(user, model.Password);
-
-                //dont leave it like this, its bad
                 if (team != null && model.CoachEnabled == false)
                 {
                     user.Team = team;
@@ -157,8 +150,7 @@ namespace SportsAdministrationApp.Controllers
                 {
                     user.Team = team;
                     user.Coach = true;
-                    //THIS IS ADMIN ONLY TEMPORARILY
-                    //CHANGE THIS AND SEED ADMINISTRATOR ACCOUNT DETAILS
+                    //kjldsj;lekjr
                     var roleResult = await userManager.AddToRoleAsync(user, Roles.CoachRole);
                     var AthleteRoleResult = await userManager.AddToRoleAsync(user, Roles.AthleteRole);
                     if (!roleResult.Succeeded || !AthleteRoleResult.Succeeded)
@@ -184,7 +176,7 @@ namespace SportsAdministrationApp.Controllers
                     }
                     if (signInManager.IsSignedIn(User))
                     {
-                        return RedirectToAction("index", "home");
+                        return RedirectToAction("index", "Athlete");
                     }
                     return View("/Views/Account/ConfirmEmail.cshtml", model);
                 }
@@ -258,7 +250,7 @@ namespace SportsAdministrationApp.Controllers
                             model.RememberMe, true);
                         if (signInResult.Succeeded)
                         {
-                            return RedirectToAction("index", "home");
+                            return RedirectToAction("index", "Athlete");
                         }
                         if (signInResult.IsLockedOut)
                         {
@@ -278,7 +270,7 @@ namespace SportsAdministrationApp.Controllers
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
-            return RedirectToAction("index", "home");
+            return RedirectToAction("index", "Athlete");
         }
         //
 
@@ -290,7 +282,7 @@ namespace SportsAdministrationApp.Controllers
         {
             if (userId == null || token == null)
             {
-                return RedirectToAction("index", "home");
+                return RedirectToAction("index", "Athlete");
             }
             var user = await userManager.FindByIdAsync(userId);
             if (user == null)
@@ -325,7 +317,7 @@ namespace SportsAdministrationApp.Controllers
             if (user.Code == model.Code && user.EmailConfirmed == true)
             {
                 await signInManager.SignInAsync(user, true);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Athlete");
             }
             if (user.Code == model.Code && user.EmailConfirmed == false)
             {
@@ -391,7 +383,7 @@ namespace SportsAdministrationApp.Controllers
             if (valid == true && user.EmailConfirmed == true)
             {
                 await signInManager.SignInAsync(user, true);
-                return RedirectToAction("index", "home");
+                return RedirectToAction("index", "Athlete");
             }
             if (valid == true && user.EmailConfirmed == false)
             {
@@ -491,7 +483,6 @@ namespace SportsAdministrationApp.Controllers
             return View(model);
         }
         
-        [Authorize(Roles = Roles.AthleteRole)]
         public IActionResult AccountSettings()
         {
             return View();

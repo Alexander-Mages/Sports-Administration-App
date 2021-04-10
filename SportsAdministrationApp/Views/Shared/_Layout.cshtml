@@ -22,31 +22,18 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Administration" asp-action="Index">Admin</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Athlete" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="AccountSettings">Manage Account</a>
                         </li>
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                         {
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle">Manage</a>
-                        <div class="dropdown-content">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Administration" asp-action="ListRoles">Manage Roles</a>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Administration" asp-action="Index">User Management</a>
-                        </div>
-                    </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Administration" asp-action="InviteCoach">Invite Coach</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Administration" asp-action="ListRoles">Role Management</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Administration" asp-action="CreateRole">Create Role</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Administration" asp-action="InviteCoach">Invite Coach</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Administration" asp-action="Index">User Management</a>
@@ -55,7 +42,12 @@
                         }
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("Coach"))
                         {
-
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Coach" asp-action="Index">Manage Athlete Data</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Administration" asp-action="Index">Manage Athletes</a>
+                            </li>
                         }
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("Athlete"))
                         {

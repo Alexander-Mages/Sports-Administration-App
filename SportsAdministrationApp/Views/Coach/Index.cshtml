@@ -1,8 +1,12 @@
 ﻿@model IEnumerable<SportsAdministrationApp.Models.User>
-<-- -->User Details Page, displays details of all users</-->
+@inject SignInManager<User> SignInManager
+@using Microsoft.AspNetCore.Identity
+
+<!--User
+    Page, displays details of all users-->
 <html>
 <head>
-    <title>User </title>
+    <title>User Data</title>
 </head>
 <body>
     <div class="row">
@@ -12,24 +16,21 @@
                 <div class="card-header">
                     <h3>@user.Name</h3>
                 </div>
+                <div>
+                    <label>Personal Record: </label>@user.PersonalRecord.PR
+                </div>
+                @foreach (var data in user.PersonalRecord.AthleteData)
+                {
+                    <div>
+                        <label>Other Times: </label>@data.Time
+                    </div>
+                }
                 <div class="card-body" text-center>
-                    <a asp-controller="home" asp-action="UserDetails" asp-route-id="@user.Id" class="btn btn-primary">View</a>
-                    <a asp-controller="home" asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
+                    @if (SignInManager.IsSignedIn(User) && (User.IsInRole("Coach") || User.IsInRole("Admin")))
+                    {
+                        <a asp-controller="Coach" asp-action="AddTime" asp-route-id="@user.Id" class="btn btn-primary">Add Time</a>
+                    }
 
-                    <form method="post" asp-action="Delete" asp-route-id="@user.Id">
-
-                        <span id="confirmDeleteSpan_@user.Id" style="display:none">
-                            <span>Are you sure you want to delete?</span>
-                            <button type="submit" class="btn btn-danger">Yes</button>
-                            <a href="#" class="btn btn-primary"
-                               onclick="confirmDelete('@user.Id', false)">No</a>
-                        </span>
-
-                        <span id="deleteSpan_@user.Id">
-                            <a href="#" class="btn btn-danger"
-                               onclick="confirmDelete('@user.Id', true)">Delete</a>
-                        </span>
-                    </form>
                 </div>
             </div>
         }

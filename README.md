@@ -9,6 +9,7 @@ git clone https://github.com/Alexander-Mages/Sports-Administration-App.git
 # Configuration
 To configure the application, you must add ReCaptcha keys to appsecrets.json, and set Dotnet AppSecrets for email credentials.
 ```
+dotnet user-secrets init
 dotnet user-secrets set "Email:Password" "PasswordHere"
 dotnet user-secrets set "Email:Username" "UsernameHere"
 dotnet user-secrets set "Email:Host" "EmailHostHere"

@@ -14,14 +14,13 @@ using System.Threading.Tasks;
 namespace SportsAdministrationApp.Controllers
 {
     [Authorize(Roles = Roles.AthleteRole)]
-
+    [Authorize(Roles = Roles.CoachRole)]
     public class AthleteController : Controller
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly ApplicationDbContext dbContext;
         private readonly IEmailService emailService;
-
         private readonly IConfiguration configuration;
         private readonly RoleManager<IdentityRole> roleManager;
 
@@ -41,8 +40,7 @@ namespace SportsAdministrationApp.Controllers
             this.emailService = emailService;
 
         }
-        //rename that
-        public IActionResult UserListWithData()
+        public IActionResult Index()
         {
             var user = userManager.Users.Include(u => u.PersonalRecord).ThenInclude(p => p.AthleteData).ToList();
             return View(user);
@@ -53,29 +51,6 @@ namespace SportsAdministrationApp.Controllers
             var user = await userManager.FindByIdAsync(id);
             return View(user);
         }
-        [HttpPost]
-        public async Task<IActionResult> AddTime(string id, string time, string location)
-        {
-            var user = await userManager.FindByIdAsync(id);
-            //PersonalRecord r = new PersonalRecord() { PR = 30 };
-            //AthleteData d = new AthleteData() { Location = "Random Natatorium", Time = 29 };
-            //r.AthleteData = new List<AthleteData>();
-            //r.AthleteData.Add(d);
-            PersonalRecord r = new PersonalRecord();
-            r.AthleteData = new List<AthleteData>();
-            AthleteData d = new AthleteData() { Location = location, Time = Convert.ToDecimal(time) };
-            //user.PersonalRecord.AthleteData.Add(new AthleteData() { Time = Convert.ToDecimal(time), Location = location });
-            r.AthleteData.Add(d);
-            user.PersonalRecord.AthleteData.Add(d);
 
-            //if (time > )
-            var result = await userManager.UpdateAsync(user);
-            if (!result.Succeeded)
-            {
-                //fix this
-                return View(user);
-            }
-            return RedirectToAction("UserListWithData");
-        }
     }
 }

@@ -279,16 +279,16 @@ namespace SportsAdministrationApp.Migrations
                         new
                         {
                             Id = 1,
-                            CoachCode = "anothacode",
-                            HeadCoach = "Mr. Foo",
+                            CoachCode = "coachcode1",
+                            HeadCoach = "Coach1",
                             Name = "Swim",
                             TeamCode = "Swim12345"
                         },
                         new
                         {
                             Id = 2,
-                            CoachCode = "code",
-                            HeadCoach = "Mr. Bar",
+                            CoachCode = "coachcode2",
+                            HeadCoach = "Coach2",
                             Name = "Tennis",
                             TeamCode = "Tennis12345"
                         });

@@ -1,5 +1,8 @@
 ﻿@model IEnumerable<SportsAdministrationApp.Models.User>
-<!--User 
+@inject SignInManager<User> SignInManager
+@using Microsoft.AspNetCore.Identity
+
+<!--User
     Page, displays details of all users-->
 <html>
 <head>
@@ -21,11 +24,12 @@
                     <div>
                         <label>Other Times: </label>@data.Time
                     </div>
-                } 
+                }
                 <div class="card-body" text-center>
-                    <a asp-controller="Athlete" asp-action="AddTime" asp-route-id="@user.Id" class="btn btn-primary">Add Time</a>
-                    <a asp-controller="Athlete" asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
-
+                    @if (SignInManager.IsSignedIn(User) && (User.IsInRole("Coach") || User.IsInRole("Admin")))
+                    {
+                        <a asp-controller="Athlete" asp-action="AddTime" asp-route-id="@user.Id" class="btn btn-primary">Add Time</a>
+                    }
 
                 </div>
             </div>

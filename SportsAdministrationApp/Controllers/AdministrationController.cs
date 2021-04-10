@@ -73,6 +73,7 @@ namespace SportsAdministrationApp.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
         {
             if (ModelState.IsValid)
@@ -118,6 +119,7 @@ namespace SportsAdministrationApp.Controllers
 
 
         //LIST ALL ROLES
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult ListRoles()
         {
@@ -129,6 +131,7 @@ namespace SportsAdministrationApp.Controllers
 
         //EDIT ROLES
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> EditRole(string id)
         {
             var role = await roleManager.FindByIdAsync(id);
@@ -152,6 +155,7 @@ namespace SportsAdministrationApp.Controllers
             return View(model);
         }
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> EditRole(EditRoleViewModel model)
         {
             var role = await roleManager.FindByIdAsync(model.Id);
@@ -181,6 +185,7 @@ namespace SportsAdministrationApp.Controllers
 
         //EDIT USERS THAT BELONG TO A SPECIFIED ROLE
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> EditUsersInRole(string roleId)
         {
             ViewBag.roleId = roleId;
@@ -213,6 +218,7 @@ namespace SportsAdministrationApp.Controllers
             return View(model);
         }
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> model, string roleId)
         {
             var role = await roleManager.FindByIdAsync(roleId);
@@ -282,6 +288,7 @@ namespace SportsAdministrationApp.Controllers
 
         //MANAGE ROLES THAT A SPECIFIC USER IS ASSIGNED TO
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> ManageUserRoles(string userId)
         {
             ViewBag.userId = userId;
@@ -312,6 +319,7 @@ namespace SportsAdministrationApp.Controllers
             return View(model);
         }
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> ManageUserRoles(List<UserRolesViewModel> model, string userId)
         {
             var user = await userManager.FindByIdAsync(userId);
@@ -341,6 +349,8 @@ namespace SportsAdministrationApp.Controllers
 
 
         //LIST ALL USERS ~ INDEX PAGE
+        [Authorize(Roles = Roles.CoachRole)]
+        [Authorize(Roles = Roles.AdminRole)]
         public IActionResult Index()
         {
             var model = userManager.Users.ToList();
@@ -370,6 +380,8 @@ namespace SportsAdministrationApp.Controllers
 
         //EDIT SPECIFIC USER DETAILS
         [HttpGet]
+        [Authorize(Roles = Roles.CoachRole)]
+        [Authorize(Roles = Roles.AdminRole)]
         public async Task<IActionResult> EditUser(string id)
         {
             var user = await userManager.FindByIdAsync(id);
@@ -384,6 +396,8 @@ namespace SportsAdministrationApp.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.CoachRole)]
+        [Authorize(Roles = Roles.AdminRole)]
         public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
             if (ModelState.IsValid)

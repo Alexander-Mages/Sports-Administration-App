@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SportsAdministrationApp.Migrations
 {
-    public partial class intiial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -230,12 +230,12 @@ namespace SportsAdministrationApp.Migrations
             migrationBuilder.InsertData(
                 table: "Teams",
                 columns: new[] { "Id", "CoachCode", "HeadCoach", "Name", "TeamCode" },
-                values: new object[] { 1, "anothacode", "Mr. Foo", "Swim", "Swim12345" });
+                values: new object[] { 1, "coachcode1", "Coach1", "Swim", "Swim12345" });
 
             migrationBuilder.InsertData(
                 table: "Teams",
                 columns: new[] { "Id", "CoachCode", "HeadCoach", "Name", "TeamCode" },
-                values: new object[] { 2, "code", "Mr. Bar", "Tennis", "Tennis12345" });
+                values: new object[] { 2, "coachcode2", "Coach2", "Tennis", "Tennis12345" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

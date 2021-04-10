@@ -1,4 +1,6 @@
 ﻿@model SportsAdministrationApp.ViewModels.EditUserViewModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
 
 @{
     ViewBag.Title = "Edit User";
@@ -40,12 +42,15 @@
             <button type="submit" class="btn btn-primary">Update</button>
             <a asp-action="index" asp-controller="administration" class="btn btn-primary">Cancel</a>
         </div>
-        <div class="card-footer">
-            <a asp-action="ManageUserRoles" asp-route-userId="@Model.Id"
-               class="btn btn-primary">
-                Manage Roles
-            </a>
-        </div>
+        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+        {
+            <div class="card-footer">
+                <a asp-action="ManageUserRoles" asp-route-userId="@Model.Id"
+                   class="btn btn-primary">
+                    Manage Roles
+                </a>
+            </div>
+        }
 
 
     </div>

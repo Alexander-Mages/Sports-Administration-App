@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SportsAdministrationApp.Models;
 using SportsAdministrationApp.Services;
@@ -58,6 +59,7 @@ namespace SportsAdministrationApp.Controllers
             return result.ToString();
         }
         //END PRIVATE METHODS
+
         [HttpGet]
         public async Task<IActionResult> AddTime(string id)
         {
@@ -65,11 +67,12 @@ namespace SportsAdministrationApp.Controllers
             return View(user);
         }
         [HttpPost]
-        public async Task<IActionResult> AddTime(string id, string time)
+        public async Task<IActionResult> AddTime(string id, string time, string location)
         {
             var user = await userManager.FindByIdAsync(id);
-            user.PersonalRecord.AthleteData.Add(new AthleteData() { Time = Convert.ToDecimal(time) });
-            //add result check
+            PersonalRecord r = new PersonalRecord();
+            AthleteData d = new AthleteData() { Location = location, Time = Convert.ToDecimal(time) };
+            user.PersonalRecord.AthleteData.Add(d);
             var result = await userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
@@ -79,9 +82,11 @@ namespace SportsAdministrationApp.Controllers
             return RedirectToAction("UserListWithData");
         }
 
+
         public IActionResult Index()
         {
-            return View();
+            var user = userManager.Users.Include(u => u.PersonalRecord).ThenInclude(p => p.AthleteData).ToList();
+            return View(user);
         }
         ////INVITE NEW Athlete
         //[HttpGet]
