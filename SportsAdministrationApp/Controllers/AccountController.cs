@@ -51,9 +51,6 @@ namespace SportsAdministrationApp.Controllers
             this.totpValidator = new TotpValidator(this.totpGenerator);
             this.roleManager = roleManager;
         }
-
-
-
         //PRIVATE METHODS
         public static bool ReCaptchaPassed(string gRecaptchaResponse, string secret, ILogger logger)
         {
@@ -81,7 +78,6 @@ namespace SportsAdministrationApp.Controllers
             var code = num % 1000000;
             return code.ToString("D6");
         }
-
         static string RandomString(int len)
         {
             const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -146,11 +142,10 @@ namespace SportsAdministrationApp.Controllers
                     }
                 }
                 else
-                    if (team != null && model.CoachEnabled == true && coach != null && user.TwoFactorEnabled)
+                if (team != null && model.CoachEnabled == true && coach != null)
                 {
                     user.Team = team;
                     user.Coach = true;
-                    //kjldsj;lekjr
                     var roleResult = await userManager.AddToRoleAsync(user, Roles.CoachRole);
                     var AthleteRoleResult = await userManager.AddToRoleAsync(user, Roles.AthleteRole);
                     if (!roleResult.Succeeded || !AthleteRoleResult.Succeeded)
@@ -158,10 +153,19 @@ namespace SportsAdministrationApp.Controllers
                         ModelState.AddModelError(string.Empty, "Coach/Team Code Invalid");
                         return RedirectToAction("Register", "Account");
                     }
+                    
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Registration Failed");
+                    return RedirectToAction("Register", "Account");
                 }
                 var UpdateResult = await userManager.UpdateAsync(user);
-
-                //var result = await userManager.CreateAsync(user, model.Password);
+                if (!UpdateResult.Succeeded)
+                {
+                    ModelState.AddModelError(string.Empty, "Could Not Create User");
+                    return RedirectToAction("Register", "Account");
+                }
                 var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                 var confirmationLink = Url.Action("ConfirmEmail", "Account",
                                         new { userId = user.Id, token = token }, Request.Scheme);
@@ -265,7 +269,6 @@ namespace SportsAdministrationApp.Controllers
         //END LOGIN
 
 
-        [Authorize(Roles = Roles.AthleteRole)]
         //LOGOUT
         public async Task<IActionResult> Logout()
         {
@@ -304,13 +307,11 @@ namespace SportsAdministrationApp.Controllers
 
         //TWO FACTOR AUTHENTICATION
         [HttpGet]
-        //[Authorize(Roles = Roles.AthleteRole)]
         public IActionResult TwoFactorConfirm()
         {
             return View();
         }
         [HttpPost]
-        //[Authorize(Roles = Roles.AthleteRole)]
         public async Task<IActionResult> TwoFactorConfirm(TwoFactorConfirmViewModel model)
         {
             User user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
@@ -336,6 +337,10 @@ namespace SportsAdministrationApp.Controllers
         public async Task<IActionResult> SetUpTotp(TotpData model)
         {
             User user = await userManager.GetUserAsync(HttpContext.User);
+            if (user == null)
+            {
+                user = await userManager.FindByIdAsync(HttpContext.Session.GetString("Id"));
+            }
             if (user.TotpConfigured == false)
             {
                 HttpContext.Session.SetString("Id", user.Id);
@@ -344,8 +349,7 @@ namespace SportsAdministrationApp.Controllers
                 var totpSetup = totpSetupGenerator.Generate("SportsAdministrationApp", user.Name, randomKey, 300, 300);
                 string qrCodeImageUrl = totpSetup.QrCodeImage;
                 string manualEntrySetupCode = totpSetup.ManualSetupKey;
-                //model.TotpSetupCode = manualEntrySetupCode;
-                //model.QrCodeUrl = qrCodeImageUrl;
+
                 user.QrCodeUrl = qrCodeImageUrl;
                 user.TotpSetupCode = manualEntrySetupCode;
                 user.randomKey = randomKey;

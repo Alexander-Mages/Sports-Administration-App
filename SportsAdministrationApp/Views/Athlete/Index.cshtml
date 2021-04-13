@@ -16,21 +16,20 @@
                 <div class="card-header">
                     <h3>@user.Name</h3>
                 </div>
-                <div>
-                    <label>Personal Record: </label>@user.PersonalRecord.PR
+                <div class="card-body">
+                    <h5 class="card-title">Personal Record: @user.PersonalRecord.PR</h5>
                 </div>
                 @foreach (var data in user.PersonalRecord.AthleteData)
                 {
-                    <div>
+                    <div class="card-body">
                         <label>Other Times: </label>@data.Time
                     </div>
                 }
-                <div class="card-body" text-center>
+                <div class="card-footer" text-center>
                     @if (SignInManager.IsSignedIn(User) && (User.IsInRole("Coach") || User.IsInRole("Admin")))
                     {
                         <a asp-controller="Athlete" asp-action="AddTime" asp-route-id="@user.Id" class="btn btn-primary">Add Time</a>
                     }
-
                 </div>
             </div>
         }

@@ -10,5 +10,6 @@ namespace SportsAdministrationApp.Models
         public const string AdminRole = "Admin";
         public const string CoachRole = "Coach";
         public const string AthleteRole = "Athlete";
+        public const string AdminOrCoach = AdminRole + "," + CoachRole;
     }
 }

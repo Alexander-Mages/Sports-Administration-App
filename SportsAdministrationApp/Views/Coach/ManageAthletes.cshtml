@@ -1,0 +1,26 @@
+﻿@model IEnumerable<SportsAdministrationApp.Models.User>
+<html>
+<head>
+    <title>User </title>
+</head>
+<body>
+    <div class="row">
+        @foreach (var user in Model)
+        {
+            <div class="card m-3" style="width: 400px;">
+                <div class="card-header">
+                    <h3>@user.Name</h3>
+                </div>
+                <div class="card-body" text-center>
+                    <a asp-controller="Coach" asp-action="Details" asp-route-id="@user.Id" class="btn btn-primary">View</a>
+                    <a asp-controller="Coach" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+</html>
+@section Scripts {
+    <script src="~/js/site.js"></script>
+}
+@Html.AntiForgeryToken()

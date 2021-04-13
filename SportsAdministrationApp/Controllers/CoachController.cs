@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SportsAdministrationApp.Models;
 using SportsAdministrationApp.Services;
+using SportsAdministrationApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,17 +71,30 @@ namespace SportsAdministrationApp.Controllers
         public async Task<IActionResult> AddTime(string id, string time, string location)
         {
             var user = await userManager.FindByIdAsync(id);
-            PersonalRecord r = new PersonalRecord();
-            AthleteData d = new AthleteData() { Location = location, Time = Convert.ToDecimal(time) };
-            user.PersonalRecord.AthleteData.Add(d);
+            decimal Time = Convert.ToDecimal(time);
+            PersonalRecord r = user.PersonalRecord;
+            //AthleteData d = new AthleteData() { Location = location, Time = Time };
+            //r.AthleteData.Add(d);
+           // user.PersonalRecord.AthleteData.Add(d);
+
+            decimal prevPr = user.PersonalRecord.PR;
+            
+
+            if (Time > prevPr)
+            {
+                //add new time to personalrecord and athletedata
+                user.PersonalRecord.PR = Time;
+            }
+
             var result = await userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
-                //fix this
                 return View(user);
             }
-            return RedirectToAction("UserListWithData");
+            return RedirectToAction("Index");
         }
+
+
 
 
         public IActionResult Index()
@@ -88,24 +102,64 @@ namespace SportsAdministrationApp.Controllers
             var user = userManager.Users.Include(u => u.PersonalRecord).ThenInclude(p => p.AthleteData).ToList();
             return View(user);
         }
-        ////INVITE NEW Athlete
-        //[HttpGet]
-        //public IActionResult InviteAthlete()
-        //{
-        //    return View();
-        //}
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult InviteAthlete(InviteAthleteViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        string code = RandomString(10);
-        //        emailService.SendAthleteInvite(model.AthleteEmail, code);
-        //        return View("AthleteInviteSuccess");
-        //    }
-        //    return View(model);
-        //}
-        ////END INVITE NEW Athlete
+
+        public IActionResult ManageAthletes()
+        {
+            var model = userManager.Users.ToList();
+            return View(model);
+        }
+        //END INDEX
+
+
+
+        //DETAILS OF SPECIFIC USER BY ID
+        public async Task<IActionResult> UserDetails(string id)
+        {
+            UserDetailsViewModel DetailsViewModel = new UserDetailsViewModel()
+            {
+                User = await userManager.FindByIdAsync(id),
+                PageTitle = "User Details"
+            };
+            if (id != null)
+            {
+                return View(DetailsViewModel);
+            }
+            return View("error.cshtml", DetailsViewModel);
+        }
+        //END DETAILS
+
+
+
+        //EDIT SPECIFIC USER DETAILS
+        [HttpGet]
+        public async Task<IActionResult> EditUser(string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+            EditUserViewModel editViewModel = new EditUserViewModel
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                //Team = user.Team,
+            };
+            return View(editViewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUser(EditUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.FindByIdAsync(model.Id);
+                user.Name = model.Name;
+                user.Email = model.Email;
+                //user.Team = model.Team;
+                await userManager.UpdateAsync(user);
+                return RedirectToAction("ManageAthletes");
+            }
+            return View();
+        }
+        //END EDIT
+
     }
 }

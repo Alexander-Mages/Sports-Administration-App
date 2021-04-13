@@ -349,8 +349,6 @@ namespace SportsAdministrationApp.Controllers
 
 
         //LIST ALL USERS ~ INDEX PAGE
-        [Authorize(Roles = Roles.CoachRole)]
-        [Authorize(Roles = Roles.AdminRole)]
         public IActionResult Index()
         {
             var model = userManager.Users.ToList();
@@ -380,8 +378,6 @@ namespace SportsAdministrationApp.Controllers
 
         //EDIT SPECIFIC USER DETAILS
         [HttpGet]
-        [Authorize(Roles = Roles.CoachRole)]
-        [Authorize(Roles = Roles.AdminRole)]
         public async Task<IActionResult> EditUser(string id)
         {
             var user = await userManager.FindByIdAsync(id);
@@ -396,8 +392,6 @@ namespace SportsAdministrationApp.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Roles.CoachRole)]
-        [Authorize(Roles = Roles.AdminRole)]
         public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
             if (ModelState.IsValid)

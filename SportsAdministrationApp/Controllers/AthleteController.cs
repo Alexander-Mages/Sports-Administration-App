@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 namespace SportsAdministrationApp.Controllers
 {
     [Authorize(Roles = Roles.AthleteRole)]
-    [Authorize(Roles = Roles.CoachRole)]
     public class AthleteController : Controller
     {
         private readonly UserManager<User> userManager;
@@ -43,12 +42,6 @@ namespace SportsAdministrationApp.Controllers
         public IActionResult Index()
         {
             var user = userManager.Users.Include(u => u.PersonalRecord).ThenInclude(p => p.AthleteData).ToList();
-            return View(user);
-        }
-        [HttpGet]
-        public async Task<IActionResult> AddTime(string id)
-        {
-            var user = await userManager.FindByIdAsync(id);
             return View(user);
         }
 

@@ -1,5 +1,5 @@
 # Sports-Administration-App
-The primary purpose of this app is for security testing purposes as a part of an apprenticeship with SecurityPs. The app has account manipulation, administration functions, separate teams, and it holds sports data for a team.
+The primary purpose of this app is for security testing purposes as a part of an apprenticeship with SecurityPs. The app has account manipulation, administration functions, separate teams, and sports data for athletes.
 It is not a thoroughly tested app, and by nature, will most likely have vulnerabilities.
 # Downloading
 to clone the repository, and download the application in its current state, use git clone:
@@ -7,7 +7,7 @@ to clone the repository, and download the application in its current state, use 
 git clone https://github.com/Alexander-Mages/Sports-Administration-App.git
 ```
 # Configuration
-To configure the application, you must add ReCaptcha keys to appsecrets.json, and set Dotnet AppSecrets for email credentials.
+To configure the application, you must add ReCaptcha keys to appsecrets.json, and set Dotnet AppSecrets for email credentials. Use these commands to configure AppSecrets:
 ```
 dotnet user-secrets init
 dotnet user-secrets set "Email:Password" "PasswordHere"
@@ -76,6 +76,6 @@ Privilege  | Username     | Email                 | Password | Team
 ---------- | -----------  | --------------------  | -------- | ------
 Admin      | Admin        | Admin@Admin.com       | Test123! | N/A
 Athlete    | TestAthlete1 | Athlete1@Athlete.com  | Test123! | Swim
-Coach      | TestCoach2   | Coac1h@Coach.com      | Test123! | Swim
-Athlete    | TestAthlete1 | Athlete2@Athlete.com  | Test123! | Swim
-Coach      | TestCoach2   | Coach2@Coach.com      | Test123! | Swim
+Coach      | TestCoach1   | Coach1@Coach.com      | Test123! | Swim
+Athlete    | TestAthlete2 | Athlete2@Athlete.com  | Test123! | Tennis
+Coach      | TestCoach2   | Coach2@Coach.com      | Test123! | Tennis
