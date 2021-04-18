@@ -125,10 +125,20 @@ namespace SportsAdministrationApp.Controllers
                 var user = new User { UserName = model.Email, Email = model.Email, Name=model.Name, TwoFactorEnabled=model.TwoFactorEnabled, PersonalRecord=r, TotpEnabled=model.TotpEnabled};
 
                 Team team = dbContext.Teams.SingleOrDefault(t => t.TeamCode.ToLower() == model.TeamCode.ToLower());
+                if (team == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Team Code Invalid");
+                    return RedirectToAction("Register", "Account");
+                }
                 Team coach = null;
                 if (model.CoachCode != null)
                 {
                     coach = dbContext.Teams.SingleOrDefault(t => t.CoachCode.ToLower() == model.CoachCode.ToLower());
+                }
+                if (coach == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Team Code Invalid");
+                    return RedirectToAction("Register", "Account");
                 }
                 var result = await userManager.CreateAsync(user, model.Password);
                 if (team != null && model.CoachEnabled == false)
