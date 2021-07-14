@@ -112,12 +112,12 @@ namespace SportsAdministrationApp.Controllers
             ViewData["ReCaptchaKey"] = configuration.GetSection("GoogleReCaptcha:key").Value;
             if (ModelState.IsValid)
             {
-                if (!ReCaptchaPassed(Request.Form["g-recaptcha-response"], //gets recaptcha response and checks it
-                    configuration.GetSection("GoogleReCaptcha:secret").Value, logger))
-                {
-                    ModelState.AddModelError(string.Empty, "Sorry sir, no bots allowed");
-                    return View(model);
-                }
+                //if (!ReCaptchaPassed(Request.Form["g-recaptcha-response"], //gets recaptcha response and checks it
+                //    configuration.GetSection("GoogleReCaptcha:secret").Value, logger))
+                //{
+                //    ModelState.AddModelError(string.Empty, "Sorry sir, no bots allowed");
+                //    return View(model);
+                //}
                 PersonalRecord r = new PersonalRecord() { PR = 30 };
                 AthleteData d = new AthleteData() { Location = "Random Natatorium", Time = 29 };
                 r.AthleteData = new List<AthleteData>();
@@ -135,7 +135,7 @@ namespace SportsAdministrationApp.Controllers
                 {
                     coach = dbContext.Teams.SingleOrDefault(t => t.CoachCode.ToLower() == model.CoachCode.ToLower());
                 }
-                if (coach == null)
+                if (coach == null && model.CoachEnabled == true)
                 {
                     ModelState.AddModelError(string.Empty, "Team Code Invalid");
                     return RedirectToAction("Register", "Account");
@@ -228,13 +228,13 @@ namespace SportsAdministrationApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                ViewData["ReCaptchaKey"] = configuration.GetSection("GoogleReCaptcha:key").Value;
-                if (!ReCaptchaPassed(Request.Form["g-recaptcha-response"], //gets recaptcha response and checks it
-                    configuration.GetSection("GoogleReCaptcha:secret").Value, logger))
-                {
-                    ModelState.AddModelError(string.Empty, "Sorry sir, no bots allowed");
-                    return View(model);
-                }
+                //ViewData["ReCaptchaKey"] = configuration.GetSection("GoogleReCaptcha:key").Value;
+                //if (!ReCaptchaPassed(Request.Form["g-recaptcha-response"], //gets recaptcha response and checks it
+                //    configuration.GetSection("GoogleReCaptcha:secret").Value, logger))
+                //{
+                //    ModelState.AddModelError(string.Empty, "Sorry sir, no bots allowed");
+                //    return View(model);
+                //}
                 var user = await userManager.FindByEmailAsync(model.Email);
                 if (user != null && await userManager.IsEmailConfirmedAsync(user))
                 {
@@ -428,13 +428,13 @@ namespace SportsAdministrationApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                ViewData["ReCaptchaKey"] = configuration.GetSection("GoogleReCaptcha:key").Value;
-                if (!ReCaptchaPassed(Request.Form["g-recaptcha-response"], //gets recaptcha response and checks it
-                    configuration.GetSection("GoogleReCaptcha:secret").Value, logger))
-                {
-                    ModelState.AddModelError(string.Empty, "Sorry sir, no bots allowed");
-                    return View(model);
-                }
+                //ViewData["ReCaptchaKey"] = configuration.GetSection("GoogleReCaptcha:key").Value;
+                //if (!ReCaptchaPassed(Request.Form["g-recaptcha-response"], //gets recaptcha response and checks it
+                //    configuration.GetSection("GoogleReCaptcha:secret").Value, logger))
+                //{
+                //    ModelState.AddModelError(string.Empty, "Sorry sir, no bots allowed");
+                //    return View(model);
+                //}
                 var user = await userManager.FindByEmailAsync(model.Email);
                 if (user != null && await userManager.IsEmailConfirmedAsync(user))
                 {

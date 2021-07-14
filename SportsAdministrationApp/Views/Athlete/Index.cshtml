@@ -28,7 +28,7 @@
                 <div class="card-footer" text-center>
                     @if (SignInManager.IsSignedIn(User) && (User.IsInRole("Coach") || User.IsInRole("Admin")))
                     {
-                        <a asp-controller="Athlete" asp-action="AddTime" asp-route-id="@user.Id" class="btn btn-primary">Add Time</a>
+                        <a asp-controller="Coach" asp-action="AddTime" asp-route-id="@user.Id" class="btn btn-primary">Add Time</a>
                     }
                 </div>
             </div>
