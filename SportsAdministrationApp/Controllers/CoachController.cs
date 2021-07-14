@@ -72,19 +72,24 @@ namespace SportsAdministrationApp.Controllers
         {
             var user = await userManager.FindByIdAsync(id);
             decimal Time = Convert.ToDecimal(time);
-            PersonalRecord r = user.PersonalRecord;
-            //AthleteData d = new AthleteData() { Location = location, Time = Time };
-            //r.AthleteData.Add(d);
-           // user.PersonalRecord.AthleteData.Add(d);
+            PersonalRecord r = dbContext.PersonalRecord.Where(x => x.Id == user.PersonalRecordId).First();
 
-            decimal prevPr = user.PersonalRecord.PR;
+            AthleteData d = new AthleteData() { Location = location, Time = Time };
+            r.AthleteData.Add(d);
+
+
+            decimal prevPr = r.PR;
             
 
-            if (Time > prevPr)
+            if (Time < prevPr)
             {
                 //add new time to personalrecord and athletedata
+                r.PR = Time;
                 user.PersonalRecord.PR = Time;
+                emailService.SendEmailAsync(user.Email, "Sports Administration App: New PR!", $"You just got a new PR of: {Time}s. Congratulations");
             }
+
+            await dbContext.SaveChangesAsync();
 
             var result = await userManager.UpdateAsync(user);
             if (!result.Succeeded)

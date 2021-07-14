@@ -112,17 +112,23 @@ namespace SportsAdministrationApp.Controllers
             ViewData["ReCaptchaKey"] = configuration.GetSection("GoogleReCaptcha:key").Value;
             if (ModelState.IsValid)
             {
-                //if (!ReCaptchaPassed(Request.Form["g-recaptcha-response"], //gets recaptcha response and checks it
-                //    configuration.GetSection("GoogleReCaptcha:secret").Value, logger))
-                //{
-                //    ModelState.AddModelError(string.Empty, "Sorry sir, no bots allowed");
-                //    return View(model);
-                //}
+                if (!ReCaptchaPassed(Request.Form["g-recaptcha-response"], //gets recaptcha response and checks it
+                    configuration.GetSection("GoogleReCaptcha:secret").Value, logger))
+                {
+                    ModelState.AddModelError(string.Empty, "Sorry sir, no bots allowed");
+                    return View(model);
+                }
                 PersonalRecord r = new PersonalRecord() { PR = 30 };
+                dbContext.Add(r);
+                await dbContext.SaveChangesAsync();
                 AthleteData d = new AthleteData() { Location = "Random Natatorium", Time = 29 };
+                d.PersonalRecordId = r.Id;
+                dbContext.Add(d);
+                await dbContext.SaveChangesAsync();
                 r.AthleteData = new List<AthleteData>();
                 r.AthleteData.Add(d);
-                var user = new User { UserName = model.Email, Email = model.Email, Name=model.Name, TwoFactorEnabled=model.TwoFactorEnabled, PersonalRecord=r, TotpEnabled=model.TotpEnabled};
+                dbContext.Update(r);
+                var user = new User { UserName = model.Email, Email = model.Email, Name=model.Name, TwoFactorEnabled=model.TwoFactorEnabled, PersonalRecord=r, PersonalRecordId=r.Id, TotpEnabled=model.TotpEnabled};
 
                 Team team = dbContext.Teams.SingleOrDefault(t => t.TeamCode.ToLower() == model.TeamCode.ToLower());
                 if (team == null)
